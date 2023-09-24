@@ -13,7 +13,6 @@ import {
 } from "chart.js";
 
 import { Bar } from "react-chartjs-2";
-import axios from "axios";
 
 // Registering the required pieces for Bar chart
 ChartJS.register(
@@ -54,11 +53,11 @@ const PalletPick = ({ data, userObject }) => {
       }
       return acc;
     }, {});
-    let earliestDate = new Date(filteredData[0]?.date); // assuming date is a field in your data
+    let earliestDate = new Date(filteredData[0]?.date);
     let latestDate = new Date(filteredData[0]?.date);
 
     filteredData.forEach((item) => {
-      const currentDate = new Date(item.date); // replace 'date' with your actual date field
+      const currentDate = new Date(item.date);
       if (currentDate < earliestDate) earliestDate = currentDate;
       if (currentDate > latestDate) latestDate = currentDate;
     });
@@ -87,8 +86,8 @@ const PalletPick = ({ data, userObject }) => {
         {
           label: "Pallet Pick",
           data: sortedUsers.data,
-          backgroundColor: colors, // Use the array of colors here
-          borderColor: colors.map((color) => color.replace("0.6", "1")), // Replace the alpha value with 1 for border
+          backgroundColor: colors,
+          borderColor: colors.map((color) => color.replace("0.6", "1")),
           borderWidth: 1,
         },
       ],
@@ -96,15 +95,13 @@ const PalletPick = ({ data, userObject }) => {
   }, []);
 
   return (
-    <div /* style={{ width: "80vw", height: "80vh" }} */>
+    <div>
       {chartData ? (
         <>
           <div
             style={{
               textAlign: "right",
               fontSize: "18px",
-              /*     paddingRight: "50px", */
-              /*  marginTop: "50px", */
             }}
           >
             Pallet Picks

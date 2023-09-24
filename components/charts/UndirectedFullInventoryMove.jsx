@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Loading from "../Loading";
-import { format } from "date-fns"; // Install this library if not already, it will be used to format dates
+import { format } from "date-fns";
 
 import {
   Chart as ChartJS,
@@ -16,13 +16,12 @@ import {
   DoughnutController,
   RadarController,
   RadialLinearScale,
-  HorizontalBar,
 } from "chart.js";
 
-import { Bar, Pie, Line, Doughnut, Radar, Bubble } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 import axios from "axios";
-import { PieController, ArcElement, Color } from "chart.js";
+import { PieController, ArcElement } from "chart.js";
 
 ChartJS.register(
   CategoryScale,
@@ -116,15 +115,13 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
   }, []);
 
   return (
-    <div /* style={{ width: "80vw", height: "80vh" }} */>
+    <div>
       {chartData ? (
         <>
           <div
             style={{
               textAlign: "right",
               fontSize: "18px",
-              /*    paddingRight: "50px", */
-              /*    marginTop: "10px", */
             }}
           >
             Undirected Full Inventory Move
