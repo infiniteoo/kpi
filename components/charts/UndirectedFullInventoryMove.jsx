@@ -85,7 +85,7 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
     const formattedEarliestDate = format(earliestDate, "MMMM do yyyy, h:mm a");
     const formattedLatestDate = format(latestDate, "MMMM do yyyy, h:mm a");
 
-    setDateRange(`From ${formattedEarliestDate} to ${formattedLatestDate}`);
+    setDateRange(`${formattedEarliestDate} - ${formattedLatestDate}`);
 
     // Convert to array, sort, and create labels and data arrays.
     const sortedUsers = Object.entries(userCounts)
@@ -116,15 +116,15 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
   }, []);
 
   return (
-    <div style={{ width: "80vw", height: "80vh" }}>
+    <div /* style={{ width: "80vw", height: "80vh" }} */>
       {chartData ? (
         <>
           <div
             style={{
               textAlign: "right",
               fontSize: "18px",
-              paddingRight: "50px",
-              marginTop: "10px",
+              /*    paddingRight: "50px", */
+              /*    marginTop: "10px", */
             }}
           >
             Undirected Full Inventory Move
