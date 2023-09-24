@@ -5,11 +5,8 @@ const FetchData = () => {
   // fetch data from the server with axios
   axios.get("http://localhost:5000/api/excel").then(({ data }) => {
     // Distribute data to timelines A, B, or C based on your logic
-    console.log(data[0]);
-    console.log(data[1]);
-    console.log(data[2]);
-    console.log(data[3]);
-    console.log(data[4]);
+    console.log("RETURNED DATA");
+    console.log(data);
 
     /*  data
       .forEach((row, index) => {

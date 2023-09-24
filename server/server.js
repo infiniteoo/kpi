@@ -54,54 +54,131 @@ function excelDateToJSDate(excelDate) {
 
 app.get('/api/excel', (req, res) => {
   console.log('hello from api excel')
-  // Define the path to your XLSX file
   const filePath = path.join(__dirname, '/inventory.csv')
-
-  // Read the XLSX file
   const workbook = XLSX.readFile(filePath)
 
-  // Assuming a single sheet, you can access it by name
   const sheetName = workbook.SheetNames[0]
   const worksheet = workbook.Sheets[sheetName]
 
-  // Convert the worksheet to an array of objects, preserving order
   const excelData = XLSX.utils.sheet_to_json(worksheet, {
     header: 1,
     raw: true,
   })
 
-  // Remove the header row if it exists
   if (excelData.length > 0 && Array.isArray(excelData[0])) {
-    excelData.shift()
+    excelData.shift() // Remove the header row if it exists
   }
 
-  console.log(excelData)
+  // Only process the first 5 rows
+  /*  const firstFiveRows = excelData.slice(105, 110) */
 
-  // Convert Excel date serial numbers to Date objects
-  const dateColumns = ['DateColumn1', 'DateColumn2'] // Replace with actual column names
-  excelData.forEach((row) => {
-    dateColumns.forEach((columnName) => {
-      const columnIndex = excelData[0].indexOf(columnName)
-      if (columnIndex !== -1) {
-        row[columnIndex] = excelDateToJSDate(row[columnIndex])
+  const formattedData = excelData.map((row) => {
+    const [date, time, user] = row[0].split(' ')
+    let strippedUser = (user.match(/[A-Z]+/g) || []).join('')
+    const [activity, operation] = row[1].split('\n')
+    const item = row[2]
+    let warehouse = ''
+    let strippedItem = ''
+    let choppedItem = ''
+
+    if (item === 3006 || item.includes('3006')) {
+      warehouse = '3006'
+    }
+
+    if (typeof item === 'string' && item.includes('3006')) {
+      strippedItem = item.replace('3006', '')
+      if (strippedItem.includes('\n')) {
+        finalStrippedItem = strippedItem.replace('\n', '')
+      } else {
+        finalStrippedItem = strippedItem
       }
-    })
+      choppedItem = finalStrippedItem.replace(/\s+/g, '')
+    }
+
+    const quantity = row[3]
+    const moveUOM = row[4]
+
+    const lpnData = row[5]
+    let lpn = ''
+    let destinationLPN = ''
+    if (typeof lpnData === 'string' && lpnData.includes('\n')) {
+      lpn = lpnData.split('\n')[0]
+      destinationLPN = lpnData.split('\n')[1]
+    } else {
+      lpn = lpnData
+    }
+
+    let subLPNdata = row[6]
+    let subLPN = ''
+    let destinationSubLPN = ''
+
+    if (typeof subLPNdata === 'string' && subLPNdata.includes('\n')) {
+      subLPN = subLPNdata.split('\n')[0]
+      destinationSubLPN = subLPNdata.split('\n')[1]
+    } else {
+      subLPN = subLPNdata
+    }
+
+    let detailLPNData = row[7]
+    let detailLPN = ''
+    let destinationDetailLPN = ''
+
+    if (typeof detailLPNData === 'string' && detailLPNData.includes('\n')) {
+      detailLPN = detailLPNData.split('\n')[0]
+      destinationDetailLPN = detailLPNData.split('\n')[1]
+    } else {
+      detailLPN = detailLPNData
+    }
+
+    let sourceLocationData = row[8]
+    let sourceLocation = ''
+    let destinationLocation = ''
+
+    if (
+      typeof sourceLocationData === 'string' &&
+      sourceLocationData.includes('\n')
+    ) {
+      sourceLocation = sourceLocationData.split('\n')[0]
+      destinationLocation = sourceLocationData.split('\n')[1]
+    } else {
+      sourceLocation = sourceLocationData
+    }
+
+    let sourceAreaData = row[9]
+    let sourceArea = ''
+    let destinationArea = ''
+
+    if (typeof sourceAreaData === 'string' && sourceAreaData.includes('\n')) {
+      sourceArea = sourceAreaData.split('\n')[0]
+      destinationArea = sourceAreaData.split('\n')[1]
+    } else {
+      sourceArea = sourceAreaData
+    }
+
+    return {
+      date,
+      time,
+      strippedUser,
+      activity,
+      operation,
+      itemNumber: choppedItem,
+      warehouse,
+      quantity,
+      moveUOM,
+      lpn,
+      destinationLPN,
+      subLPN,
+      destinationSubLPN,
+      detailLPN,
+      destinationDetailLPN,
+      sourceLocation,
+      destinationLocation,
+      sourceArea,
+      destinationArea,
+    }
   })
 
-  // Convert Excel time fractions to formatted time strings
-  const timeColumns = ['TimeColumn1', 'TimeColumn2'] // Replace with actual column names
-  excelData.forEach((row) => {
-    timeColumns.forEach((columnName) => {
-      const columnIndex = excelData[0].indexOf(columnName)
-      if (columnIndex !== -1) {
-        row[columnIndex] = excelTimeToFormattedTime(row[columnIndex])
-      }
-    })
-  })
-
-  // Send the JSON data as a response
-
-  res.json(excelData)
+  res.json(formattedData)
 })
 
 app.listen(port, () => {
