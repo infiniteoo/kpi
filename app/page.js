@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { separateByUser } from '../utils/dataManipulation'
 import DataDisplay from '../components/DataDisplay'
+
 import logo from '../public/keyperformance.png'
 import Image from 'next/image' // Next.js Image component for optimized images
 import { keyframes } from '@emotion/react' // Importing keyframes from Emotion
@@ -39,6 +40,7 @@ export default function Home() {
         setData(result.data)
         let compiledUserObject = separateByUser(result.data)
         console.log('user object', compiledUserObject)
+        setUserObject(compiledUserObject)
       } catch (error) {
         console.error('Error fetching data: ', error)
       }
@@ -49,7 +51,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-6">
       <AnimatedLogo src={logo} alt="Logo" width={300} height={160} />
-      <DataDisplay />
+      <DataDisplay data={data} userObject={userObject} />
     </main>
   )
 }

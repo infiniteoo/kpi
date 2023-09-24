@@ -1,54 +1,43 @@
 import React, { useState, useEffect } from "react";
 import Loading from "../Loading";
-import { format } from "date-fns"; // Install this library if not already, it will be used to format dates
+import { format } from "date-fns";
 
 import {
   Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  LineController,
-  LineElement,
-  PointElement,
-  DoughnutController,
-  RadarController,
-  RadialLinearScale,
-  HorizontalBar,
-} from "chart.js";
-
-import { Bar, Pie, Line, Doughnut, Radar, Bubble } from "react-chartjs-2";
-
-import axios from "axios";
-import { PieController, ArcElement, Color } from "chart.js";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
   Title,
   Tooltip,
   Legend,
   PieController,
   ArcElement,
-  LineController,
-  LineElement,
-  PointElement,
-  DoughnutController,
-  RadarController,
-  RadialLinearScale
-);
+} from "chart.js";
 
-const UndirectedFullInventoryMove = ({ data, userObject }) => {
+import { Pie } from "react-chartjs-2";
+import axios from "axios";
+
+// Registering the required pieces for Pie chart
+ChartJS.register(PieController, ArcElement, Title, Tooltip, Legend);
+
+const PalletPick = ({ data, userObject }) => {
   const [chartData, setChartData] = useState(null);
   const [dateRange, setDateRange] = useState("");
 
+  const colors = [
+    "rgba(255, 99, 132, 0.6)", // red
+    "rgba(54, 162, 235, 0.6)", // blue
+    "rgba(255, 206, 86, 0.6)", // yellow
+    "rgba(75, 192, 192, 0.6)", // green
+    "rgba(153, 102, 255, 0.6)", // purple
+    "rgba(255, 159, 64, 0.6)", // orange
+    "rgba(129, 159, 64, 0.6)", // olive
+    "rgba(209, 102, 221, 0.6)", // pink
+    "rgba(100, 149, 237, 0.6)", // cornflower blue
+    "rgba(144, 238, 144, 0.6)", // light green
+    "rgba(255, 105, 180, 0.6)", // hot pink
+    "rgba(218, 165, 32, 0.6)", // golden rod
+  ];
+
   useEffect(() => {
-    const filteredData = data.filter(
-      (item) => item.activity === "Undirected Full Inventory Move"
-    );
+    const filteredData = data.filter((item) => item.activity === "Pallet Pick");
 
     const userCounts = filteredData.reduce((acc, cur) => {
       const user = cur.user;
@@ -88,12 +77,11 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
       labels: sortedUsers.labels,
       datasets: [
         {
-          label: "Undirected Full Inventory Move",
+          label: "Pallet Pick",
           data: sortedUsers.data,
-          backgroundColor: "rgba(75,192,192,0.6)",
-          borderColor: "rgba(75,192,192,1)",
+          backgroundColor: colors, // Use the array of colors here
+          borderColor: colors.map((color) => color.replace("0.6", "1")), // Replace the alpha value with 1 for border
           borderWidth: 1,
-          fontSize: 20,
         },
       ],
     });
@@ -103,33 +91,15 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
     <div style={{ width: "80vw", height: "80vh" }}>
       {chartData ? (
         <>
-          <Bar
+          <Pie
             data={chartData}
             options={{
               responsive: true,
-              scales: {
-                x: {
-                  beginAtZero: true,
-                  ticks: {
-                    font: {
-                      size: 14, // adjust this value for x-axis labels
-                    },
-                  },
-                },
-                y: {
-                  beginAtZero: true,
-                  ticks: {
-                    font: {
-                      size: 18, // adjust this value for y-axis labels
-                    },
-                  },
-                },
-              },
               plugins: {
                 legend: {
                   labels: {
                     font: {
-                      size: 18, // adjust this value for legend labels
+                      size: 18,
                     },
                   },
                 },
@@ -153,4 +123,4 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
   );
 };
 
-export default UndirectedFullInventoryMove;
+export default PalletPick;
