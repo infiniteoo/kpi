@@ -52,7 +52,7 @@ function excelDateToJSDate(excelDate) {
   )
 }
 
-app.get('/api/excel', (req, res) => {
+app.get('/api/excel', async (req, res) => {
   console.log('hello from api excel')
   const filePath = path.join(__dirname, '/inventory.csv')
   const workbook = XLSX.readFile(filePath)
@@ -158,7 +158,7 @@ app.get('/api/excel', (req, res) => {
     return {
       date,
       time,
-      strippedUser,
+      user: strippedUser,
       activity,
       operation,
       itemNumber: choppedItem,
