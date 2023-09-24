@@ -9,7 +9,7 @@ const override = {
 
 const Loading = () => {
   let [loading, setLoading] = useState(true);
-  let [color, setColor] = useState("#ffffff");
+  let [color, setColor] = useState("#5ec2cc");
 
   return (
     <div className="flex-col">

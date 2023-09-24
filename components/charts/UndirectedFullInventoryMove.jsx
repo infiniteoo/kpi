@@ -90,7 +90,7 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
         {
           label: "Undirected Full Inventory Move",
           data: sortedUsers.data,
-          backgroundColor: "rgba(75,192,192,0.6)",
+          backgroundColor: "#5ec2cc",
           borderColor: "rgba(75,192,192,1)",
           borderWidth: 1,
           fontSize: 20,
