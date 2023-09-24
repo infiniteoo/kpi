@@ -2,12 +2,15 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { separateByUser } from '../utils/dataManipulation'
-import DataDisplay from '../components/DataDisplay'
+import Header from '../components/Header' //
+
+import DataDisplay from '../components/DataDisplay.jsx'
 
 import logo from '../public/keyperformance.png'
-import Image from 'next/image' // Next.js Image component for optimized images
-import { keyframes } from '@emotion/react' // Importing keyframes from Emotion
-import styled from '@emotion/styled' // Importing styled from Emotion
+import Image from 'next/image'
+import { keyframes } from '@emotion/react'
+import styled from '@emotion/styled'
+import ParticleDisplay from '../components/ParticleDisplay'
 
 // Define the keyframes for the sliding animation
 const slideIn = keyframes`
@@ -49,9 +52,15 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-around p-6">
-      <AnimatedLogo src={logo} alt="Logo" width={300} height={160} />
-      <DataDisplay data={data} userObject={userObject} />
-    </main>
+    <>
+      <main className="flex min-h-screen flex-col items-center justify-around ">
+        {loading ? null : <Header />}
+
+        <DataDisplay data={data} userObject={userObject} />
+        <div style={{ position: 'fixed', zIndex: -10 }}>
+          <ParticleDisplay />
+        </div>
+      </main>
+    </>
   )
 }

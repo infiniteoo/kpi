@@ -123,6 +123,8 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
             style={{
               textAlign: "center",
               fontSize: "14px",
+              position: "relative",
+              zIndex: 50,
             }}
           >
             Undirected Full Inventory Move

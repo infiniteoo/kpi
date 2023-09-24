@@ -64,10 +64,14 @@ const DataDisplay = ({ data, userObject }) => {
 
   return (
     <>
-      <div className=""> {dateRange}</div>
-      <div className="flex flex-wrap justify-center w-full gap-8">
+      <div style={{ zIndex: 50, position: "relative" }}> {dateRange}</div>
+      <div
+        className="flex flex-wrap justify-center w-full gap-8 relative z-50"
+        style={{ zIndex: 50, position: "relative" }}
+      >
         <div
-          className="w-1/4 chart-card"
+          style={{ zIndex: 50, position: "relative" }}
+          className="w-1/4 chart-card relative z-50"
           onClick={() =>
             openModalWithChart(
               <UndirectedFullInventoryMove
@@ -80,7 +84,7 @@ const DataDisplay = ({ data, userObject }) => {
           <UndirectedFullInventoryMove data={data} userObject={userObject} />
         </div>
         <div
-          className="w-1/4 chart-card"
+          className="w-1/4 chart-card relative z-50"
           onClick={() =>
             openModalWithChart(
               <PalletPick data={data} userObject={userObject} />
@@ -90,7 +94,7 @@ const DataDisplay = ({ data, userObject }) => {
           <PalletPick data={data} userObject={userObject} />
         </div>
         <div
-          className="w-1/4 chart-card"
+          className="w-1/4 chart-card relative z-50"
           onClick={() =>
             openModalWithChart(
               <FluidLoadPalletPick data={data} userObject={userObject} />
@@ -100,7 +104,7 @@ const DataDisplay = ({ data, userObject }) => {
           <FluidLoadPalletPick data={data} userObject={userObject} />
         </div>
         <div
-          className="w-1/4 chart-card"
+          className="w-1/4 chart-card relative z-50"
           onClick={() =>
             openModalWithChart(
               <TrailerLoad data={data} userObject={userObject} />
