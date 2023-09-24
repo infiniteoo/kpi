@@ -6,6 +6,7 @@ import Modal from "./charts/Modal"; // Make sure to import your Modal component,
 import UndirectedFullInventoryMove from "./charts/UndirectedFullInventoryMove";
 import PalletPick from "./charts/PalletPick";
 import FluidLoadPalletPick from "./charts/FluidLoadPalletPick";
+import TrailerLoad from "./charts/TrailerLoad";
 
 const DataDisplay = ({ data, userObject }) => {
   const [currentChartIndex, setCurrentChartIndex] = useState(0);
@@ -29,6 +30,9 @@ const DataDisplay = ({ data, userObject }) => {
       </div>
       <div className="w-1/4">
         <FluidLoadPalletPick data={data} userObject={userObject} />
+      </div>
+      <div className="w-1/4">
+        <TrailerLoad data={data} userObject={userObject} />
       </div>
     </div>
     /*  <div className="chart-container">
