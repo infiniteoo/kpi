@@ -145,22 +145,13 @@ const FluidLoadPalletPick = ({ data, userObject }) => {
         <>
           <div
             style={{
-              textAlign: "right",
-              fontSize: "18px",
+              textAlign: "center",
+              fontSize: "14px",
             }}
           >
             Fluid Load
           </div>
           <Line data={chartData} options={options} />
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: "14px",
-              paddingTop: "5px",
-            }}
-          >
-            {dateRange}
-          </div>
         </>
       ) : (
         <Loading />

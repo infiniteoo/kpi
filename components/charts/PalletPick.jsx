@@ -100,8 +100,8 @@ const PalletPick = ({ data, userObject }) => {
         <>
           <div
             style={{
-              textAlign: "right",
-              fontSize: "18px",
+              textAlign: "center",
+              fontSize: "14px",
             }}
           >
             Pallet Picks
@@ -130,15 +130,6 @@ const PalletPick = ({ data, userObject }) => {
               },
             }}
           />
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: "14px",
-              paddingTop: "5px",
-            }}
-          >
-            {dateRange}
-          </div>
         </>
       ) : (
         <Loading />

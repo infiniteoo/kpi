@@ -71,6 +71,7 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
       }
       return acc;
     }, {});
+
     let earliestDate = new Date(filteredData[0]?.date); // assuming date is a field in your data
     let latestDate = new Date(filteredData[0]?.date);
 
@@ -120,8 +121,8 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
         <>
           <div
             style={{
-              textAlign: "right",
-              fontSize: "18px",
+              textAlign: "center",
+              fontSize: "14px",
             }}
           >
             Undirected Full Inventory Move
@@ -155,15 +156,6 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
               },
             }}
           />
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: "14px",
-              paddingTop: "5px",
-            }}
-          >
-            {dateRange}
-          </div>
         </>
       ) : (
         <Loading />

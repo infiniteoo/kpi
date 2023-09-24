@@ -1,16 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Loading from "./Loading";
-import Modal from "./charts/Modal"; // Make sure to import your Modal component, create one if you don't have it already.
-
-// Import your chart components
+import Modal from "./charts/Modal";
+import { format } from "date-fns";
 import UndirectedFullInventoryMove from "./charts/UndirectedFullInventoryMove";
 import PalletPick from "./charts/PalletPick";
 import FluidLoadPalletPick from "./charts/FluidLoadPalletPick";
 import TrailerLoad from "./charts/TrailerLoad";
 
 const DataDisplay = ({ data, userObject }) => {
-  const [currentChartIndex, setCurrentChartIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentChart, setCurrentChart] = useState(null);
+  const [dateRange, setDateRange] = useState("");
+
+  useEffect(() => {
+    if (!data || data.length === 0) return; // Return early if data is not available.
+
+    let earliestDate = new Date(); // Assuming date is a field in your data.
+    let latestDate = new Date("1970-01-01");
+
+    data.forEach((item) => {
+      const currentDate = new Date(item.date); // Replace 'date' with your actual date field.
+      if (currentDate < earliestDate) earliestDate = currentDate;
+      if (currentDate > latestDate) latestDate = currentDate;
+    });
+
+    // Formatting the dates
+    const formattedEarliestDate = format(earliestDate, "MMMM do yyyy, h:mm a");
+    const formattedLatestDate = format(latestDate, "MMMM do yyyy, h:mm a");
+
+    setDateRange(`${formattedEarliestDate} - ${formattedLatestDate}`);
+
+    const userCounts = data.reduce((acc, cur) => {
+      const user = cur.user;
+      if (user !== "NOUSER") {
+        acc[user] = (acc[user] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
+    // Convert to array, sort, and create labels and data arrays.
+    const sortedUsers = Object.entries(userCounts)
+      .sort((a, b) => b[1] - a[1])
+      .reduce(
+        (acc, [user, count]) => {
+          acc.labels.push(user);
+          acc.data.push(count);
+          return acc;
+        },
+        { labels: [], data: [] }
+      );
+  }, [data]); // Include 'data' in dependency array to rerun effect when 'data' changes.
 
   const charts = [
     <UndirectedFullInventoryMove data={data} userObject={userObject} />,
@@ -18,52 +57,64 @@ const DataDisplay = ({ data, userObject }) => {
     <FluidLoadPalletPick data={data} userObject={userObject} />,
   ];
 
+  const openModalWithChart = (chart) => {
+    setCurrentChart(chart);
+    setIsModalOpen(true);
+  };
   if (!data) return <Loading />;
 
   return (
-    <div className="flex flex-wrap justify-center w-full gap-8">
-      <div className="w-1/4">
-        <UndirectedFullInventoryMove data={data} userObject={userObject} />
+    <>
+      <div className="mb-5"> {dateRange}</div>
+      <div className="flex flex-wrap justify-center w-full gap-8">
+        <div
+          className="w-1/4 chart-card"
+          onClick={() =>
+            openModalWithChart(
+              <UndirectedFullInventoryMove
+                data={data}
+                userObject={userObject}
+              />
+            )
+          }
+        >
+          <UndirectedFullInventoryMove data={data} userObject={userObject} />
+        </div>
+        <div
+          className="w-1/4 chart-card"
+          onClick={() =>
+            openModalWithChart(
+              <PalletPick data={data} userObject={userObject} />
+            )
+          }
+        >
+          <PalletPick data={data} userObject={userObject} />
+        </div>
+        <div
+          className="w-1/4 chart-card"
+          onClick={() =>
+            openModalWithChart(
+              <FluidLoadPalletPick data={data} userObject={userObject} />
+            )
+          }
+        >
+          <FluidLoadPalletPick data={data} userObject={userObject} />
+        </div>
+        <div
+          className="w-1/4 chart-card"
+          onClick={() =>
+            openModalWithChart(
+              <TrailerLoad data={data} userObject={userObject} />
+            )
+          }
+        >
+          <TrailerLoad data={data} userObject={userObject} />
+        </div>
+        {isModalOpen && (
+          <Modal onClose={() => setIsModalOpen(false)}>{currentChart}</Modal>
+        )}
       </div>
-      <div className="w-1/4">
-        <PalletPick data={data} userObject={userObject} />
-      </div>
-      <div className="w-1/4">
-        <FluidLoadPalletPick data={data} userObject={userObject} />
-      </div>
-      <div className="w-1/4">
-        <TrailerLoad data={data} userObject={userObject} />
-      </div>
-    </div>
-    /*  <div className="chart-container">
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-       
-          {charts[currentChartIndex]}
-          <button
-            onClick={() =>
-              setCurrentChartIndex(
-                (prevIndex) => (prevIndex + 1) % charts.length
-              )
-            }
-          >
-            Next
-          </button>
-          <button
-            onClick={() =>
-              setCurrentChartIndex(
-                (prevIndex) => (prevIndex - 1 + charts.length) % charts.length
-              )
-            }
-          >
-            Previous
-          </button>
-        </Modal>
-      )}
-      <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
-   
-    </div>
-  ); */
+    </>
   );
 };
 

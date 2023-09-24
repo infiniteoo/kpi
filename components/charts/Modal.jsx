@@ -15,7 +15,7 @@ const Modal = ({ children, onClose }) => {
   };
 
   const modalStyle = {
-    width: "70%",
+    width: "80%",
     backgroundColor: "white",
     padding: "20px",
     borderRadius: "8px",

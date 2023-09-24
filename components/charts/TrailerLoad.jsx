@@ -141,16 +141,10 @@ const TrailerLoad = ({ data, userObject }) => {
     <div>
       {chartData ? (
         <>
-          <div style={{ textAlign: "right", fontSize: "18px" }}>
+          <div style={{ textAlign: "center", fontSize: "14px" }}>
             Trailer Load
           </div>
           <Bar data={chartData} options={options} />{" "}
-          {/* Use Bar instead of Radar */}
-          <div
-            style={{ textAlign: "center", fontSize: "14px", paddingTop: "5px" }}
-          >
-            {dateRange}
-          </div>
         </>
       ) : (
         <Loading />
