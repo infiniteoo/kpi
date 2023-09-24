@@ -13,13 +13,13 @@ const DataDisplay = ({ data, userObject }) => {
   const [dateRange, setDateRange] = useState("");
 
   useEffect(() => {
-    if (!data || data.length === 0) return; // Return early if data is not available.
+    if (!data || data.length === 0) return;
 
-    let earliestDate = new Date(); // Assuming date is a field in your data.
+    let earliestDate = new Date();
     let latestDate = new Date("1970-01-01");
 
     data.forEach((item) => {
-      const currentDate = new Date(item.date); // Replace 'date' with your actual date field.
+      const currentDate = new Date(item.date);
       if (currentDate < earliestDate) earliestDate = currentDate;
       if (currentDate > latestDate) latestDate = currentDate;
     });
@@ -38,7 +38,6 @@ const DataDisplay = ({ data, userObject }) => {
       return acc;
     }, {});
 
-    // Convert to array, sort, and create labels and data arrays.
     const sortedUsers = Object.entries(userCounts)
       .sort((a, b) => b[1] - a[1])
       .reduce(
@@ -49,7 +48,7 @@ const DataDisplay = ({ data, userObject }) => {
         },
         { labels: [], data: [] }
       );
-  }, [data]); // Include 'data' in dependency array to rerun effect when 'data' changes.
+  }, [data]);
 
   const charts = [
     <UndirectedFullInventoryMove data={data} userObject={userObject} />,
@@ -65,7 +64,7 @@ const DataDisplay = ({ data, userObject }) => {
 
   return (
     <>
-      <div className="mb-5"> {dateRange}</div>
+      <div className=""> {dateRange}</div>
       <div className="flex flex-wrap justify-center w-full gap-8">
         <div
           className="w-1/4 chart-card"

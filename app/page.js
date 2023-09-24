@@ -49,7 +49,7 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-6">
+    <main className="flex min-h-screen flex-col items-center justify-around p-6">
       <AnimatedLogo src={logo} alt="Logo" width={300} height={160} />
       <DataDisplay data={data} userObject={userObject} />
     </main>
