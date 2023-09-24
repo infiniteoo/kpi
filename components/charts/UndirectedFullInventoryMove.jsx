@@ -45,6 +45,21 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
   const [chartData, setChartData] = useState(null);
   const [dateRange, setDateRange] = useState("");
 
+  const colors = [
+    "rgba(255, 99, 132, 0.6)", // red
+    "rgba(54, 162, 235, 0.6)", // blue
+    "rgba(255, 206, 86, 0.6)", // yellow
+    "rgba(75, 192, 192, 0.6)", // green
+    "rgba(153, 102, 255, 0.6)", // purple
+    "rgba(255, 159, 64, 0.6)", // orange
+    "rgba(129, 159, 64, 0.6)", // olive
+    "rgba(209, 102, 221, 0.6)", // pink
+    "rgba(100, 149, 237, 0.6)", // cornflower blue
+    "rgba(144, 238, 144, 0.6)", // light green
+    "rgba(255, 105, 180, 0.6)", // hot pink
+    "rgba(218, 165, 32, 0.6)", // golden rod
+  ];
+
   useEffect(() => {
     const filteredData = data.filter(
       (item) => item.activity === "Undirected Full Inventory Move"
@@ -90,10 +105,11 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
         {
           label: "Undirected Full Inventory Move",
           data: sortedUsers.data,
-          backgroundColor: "#5ec2cc",
-          borderColor: "rgba(75,192,192,1)",
+          backgroundColor: colors.slice(0, sortedUsers.data.length), // Use the array of colors here
+          borderColor: colors
+            .slice(0, sortedUsers.data.length)
+            .map((color) => color.replace("0.6", "1")), // Replace the alpha value with 1 for border
           borderWidth: 1,
-          fontSize: 20,
         },
       ],
     });
@@ -103,6 +119,16 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
     <div style={{ width: "80vw", height: "80vh" }}>
       {chartData ? (
         <>
+          <div
+            style={{
+              textAlign: "right",
+              fontSize: "18px",
+              paddingRight: "50px",
+              marginTop: "10px",
+            }}
+          >
+            Undirected Full Inventory Move
+          </div>
           <Bar
             data={chartData}
             options={{
@@ -127,11 +153,7 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
               },
               plugins: {
                 legend: {
-                  labels: {
-                    font: {
-                      size: 18, // adjust this value for legend labels
-                    },
-                  },
+                  display: false, // This will hide the legend including the color box
                 },
               },
             }}

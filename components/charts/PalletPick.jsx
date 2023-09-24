@@ -7,15 +7,23 @@ import {
   Title,
   Tooltip,
   Legend,
-  PieController,
-  ArcElement,
+  CategoryScale,
+  LinearScale,
+  BarElement,
 } from "chart.js";
 
-import { Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import axios from "axios";
 
-// Registering the required pieces for Pie chart
-ChartJS.register(PieController, ArcElement, Title, Tooltip, Legend);
+// Registering the required pieces for Bar chart
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const PalletPick = ({ data, userObject }) => {
   const [chartData, setChartData] = useState(null);
@@ -91,7 +99,17 @@ const PalletPick = ({ data, userObject }) => {
     <div style={{ width: "80vw", height: "80vh" }}>
       {chartData ? (
         <>
-          <Pie
+          <div
+            style={{
+              textAlign: "right",
+              fontSize: "18px",
+              paddingRight: "50px",
+              marginTop: "50px",
+            }}
+          >
+            Pallet Picks
+          </div>
+          <Bar
             data={chartData}
             options={{
               responsive: true,
@@ -102,6 +120,14 @@ const PalletPick = ({ data, userObject }) => {
                       size: 18,
                     },
                   },
+                },
+              },
+              scales: {
+                x: {
+                  beginAtZero: true,
+                },
+                y: {
+                  beginAtZero: true,
                 },
               },
             }}
