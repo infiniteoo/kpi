@@ -151,7 +151,13 @@ const FluidLoadPalletPick = ({ data, userObject }) => {
           >
             Fluid Load
           </div>
-          <Line data={chartData} options={options} />
+          <div style={{ position: "relative", zIndex: 50 }}>
+            <Line
+              data={chartData}
+              options={options}
+              style={{ position: "relative", zIndex: 50 }}
+            />
+          </div>
         </>
       ) : (
         <Loading />

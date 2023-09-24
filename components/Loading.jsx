@@ -21,10 +21,6 @@ const Loading = () => {
         aria-label="Loading Spinner"
         data-testid="loader"
       />
-
-      <h1 className="loading-text text-5xl mt-10 items-center text-center justify-center text-gray-500">
-        Loading...
-      </h1>
     </div>
   );
 };
