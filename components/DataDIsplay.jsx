@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Loading from "./Loading";
-import { format } from "date-fns"; // Install this library if not already, it will be used to format dates
+
 import UndirectedFullInventoryMove from "./charts/UndirectedFullInventoryMove";
 import PalletPick from "./charts/PalletPick";
+import FluidLoadPalletPick from "./charts/FluidLoadPalletPick";
 
 import {
   Chart as ChartJS,
@@ -21,10 +22,7 @@ import {
   HorizontalBar,
 } from "chart.js";
 
-import { Bar, Pie, Line, Doughnut, Radar, Bubble } from "react-chartjs-2";
-
-import axios from "axios";
-import { PieController, ArcElement, Color } from "chart.js";
+import { PieController, ArcElement } from "chart.js";
 
 ChartJS.register(
   CategoryScale,
@@ -44,22 +42,13 @@ ChartJS.register(
 );
 
 const DataDisplay = ({ data, userObject }) => {
-  const [dateRange, setDateRange] = useState("");
-
   return (
     <div className="chart-container">
       {data ? (
         <>
-          <UndirectedFullInventoryMove
-            data={data}
-            userObject={userObject}
-            dateRange={dateRange}
-          />
-          <PalletPick
-            data={data}
-            userObject={userObject}
-            dateRange={dateRange}
-          />
+          <UndirectedFullInventoryMove data={data} userObject={userObject} />
+          <PalletPick data={data} userObject={userObject} />
+          <FluidLoadPalletPick data={data} userObject={userObject} />
         </>
       ) : (
         <Loading />

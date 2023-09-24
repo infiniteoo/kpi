@@ -9,23 +9,24 @@ import {
   Legend,
   CategoryScale,
   LinearScale,
-  BarElement,
+  LineElement,
+  PointElement,
 } from "chart.js";
 
-import { Bar } from "react-chartjs-2";
-import axios from "axios";
+import { Line } from "react-chartjs-2"; // Import Line instead of Bar
 
-// Registering the required pieces for Bar chart
+// Registering the required pieces for Line chart
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend
 );
 
-const PalletPick = ({ data, userObject }) => {
+const FluidLoadPalletPick = ({ data, userObject }) => {
   const [chartData, setChartData] = useState(null);
   const [dateRange, setDateRange] = useState("");
 
@@ -44,8 +45,47 @@ const PalletPick = ({ data, userObject }) => {
     "rgba(218, 165, 32, 0.6)", // golden rod
   ];
 
+  const options = {
+    responsive: true,
+    tension: 0.4, // Add this line to enable bezier curves
+    plugins: {
+      legend: {
+        display: false,
+        labels: {
+          font: {
+            size: 18,
+          },
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            return `Count: ${context.parsed.y}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+      },
+      y: {
+        beginAtZero: true,
+      },
+    },
+    elements: {
+      point: {
+        radius: 5,
+        hoverRadius: 7,
+        pointStyle: "circle",
+        backgroundColor: colors.map((color) => color.replace("0.6", "1")), // Solid color for points
+        hoverBackgroundColor: "rgba(0,0,0,0.9)", // Different color when a user hovers over a point
+      },
+    },
+  };
+
   useEffect(() => {
-    const filteredData = data.filter((item) => item.activity === "Pallet Pick");
+    const filteredData = data.filter((item) => item.activity === "Fluid Load");
 
     const userCounts = filteredData.reduce((acc, cur) => {
       const user = cur.user;
@@ -68,7 +108,6 @@ const PalletPick = ({ data, userObject }) => {
     const formattedLatestDate = format(latestDate, "MMMM do yyyy, h:mm a");
 
     setDateRange(`From ${formattedEarliestDate} to ${formattedLatestDate}`);
-
     // Convert to array, sort, and create labels and data arrays.
     const sortedUsers = Object.entries(userCounts)
       .sort((a, b) => b[1] - a[1])
@@ -85,11 +124,16 @@ const PalletPick = ({ data, userObject }) => {
       labels: sortedUsers.labels,
       datasets: [
         {
-          label: "Pallet Pick",
+          label: "Fluid Load",
           data: sortedUsers.data,
           backgroundColor: colors, // Use the array of colors here
           borderColor: colors.map((color) => color.replace("0.6", "1")), // Replace the alpha value with 1 for border
           borderWidth: 1,
+          hoverBackgroundColor: colors.map((color) =>
+            color.replace("0.6", "0.8")
+          ), // Use a slightly higher alpha for hover background
+          hoverBorderColor: colors.map((color) => color.replace("0.6", "1")), // Use a solid color for hover border
+          hoverBorderWidth: 2, // Increase border width on hover
         },
       ],
     });
@@ -107,32 +151,9 @@ const PalletPick = ({ data, userObject }) => {
               marginTop: "50px",
             }}
           >
-            Pallet Picks
+            Fluid Load
           </div>
-          <Bar
-            data={chartData}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: {
-                  display: false,
-                  labels: {
-                    font: {
-                      size: 18,
-                    },
-                  },
-                },
-              },
-              scales: {
-                x: {
-                  beginAtZero: true,
-                },
-                y: {
-                  beginAtZero: true,
-                },
-              },
-            }}
-          />
+          <Line data={chartData} options={options} />
           <div
             style={{
               textAlign: "center",
@@ -150,4 +171,4 @@ const PalletPick = ({ data, userObject }) => {
   );
 };
 
-export default PalletPick;
+export default FluidLoadPalletPick;
