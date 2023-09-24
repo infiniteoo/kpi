@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Loading from "./Loading";
+import Loading from "../Loading";
 import { format } from "date-fns"; // Install this library if not already, it will be used to format dates
-import UndirectedFullInventoryMove from "./charts/UndirectedFullInventoryMove";
 
 import {
   Chart as ChartJS,
@@ -42,7 +41,7 @@ ChartJS.register(
   RadialLinearScale
 );
 
-const DataDisplay = () => {
+const UndirectedFullInventoryMove = () => {
   const [chartData, setChartData] = useState(null);
   const [dateRange, setDateRange] = useState("");
 
@@ -113,21 +112,57 @@ const DataDisplay = () => {
   }, []);
 
   return (
-    <div
-      style={{
-        position: "relative",
-        width: "80vw",
-        height: "80vh",
-        marginTop: "",
-      }}
-    >
+    <div style={{ position: "relative", width: "80vw", height: "80vh" }}>
       {chartData ? (
         <>
-          <UndirectedFullInventoryMove />
+          <Bar
+            data={chartData}
+            options={{
+              responsive: true,
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  ticks: {
+                    font: {
+                      size: 14, // adjust this value for x-axis labels
+                    },
+                  },
+                },
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    font: {
+                      size: 18, // adjust this value for y-axis labels
+                    },
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    font: {
+                      size: 18, // adjust this value for legend labels
+                    },
+                  },
+                },
+              },
+            }}
+          />
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: "14px",
+              paddingTop: "5px",
+            }}
+          >
+            {dateRange}
+          </div>
         </>
-      ) : null}
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 };
 
-export default DataDisplay;
+export default UndirectedFullInventoryMove;
