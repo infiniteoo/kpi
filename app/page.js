@@ -2,6 +2,8 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { separateByUser } from '../utils/dataManipulation'
+import DataDisplay from '../components/DataDIsplay'
+import Loading from '../components/Loading'
 
 export default function Home() {
   const [data, setData] = useState(null)
@@ -26,7 +28,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      {loading ? <h1>Loading...</h1> : <h1>Loaded</h1>}
+      {loading ? <Loading /> : <DataDisplay />}
     </main>
   )
 }
