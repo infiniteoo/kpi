@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { separateByUser } from '../utils/dataManipulation'
 import Header from '../components/Header' //
-import DataDisplay from '../components/DataDisplay.jsx'
+import DataDisplay from '../components/DataDisplayTemp.jsx'
 import Image from 'next/image'
 import { keyframes } from '@emotion/react'
 import styled from '@emotion/styled'

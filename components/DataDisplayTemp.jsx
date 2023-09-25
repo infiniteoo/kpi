@@ -6,6 +6,8 @@ import UndirectedFullInventoryMove from "./charts/UndirectedFullInventoryMove";
 import PalletPick from "./charts/PalletPick";
 import FluidLoadPalletPick from "./charts/FluidLoadPalletPick";
 import TrailerLoad from "./charts/TrailerLoad";
+import ListPick from "./charts/ListPick";
+import ItemsShipped from "./charts/ItemsShipped";
 
 const DataDisplay = ({ data, userObject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,6 +98,14 @@ const DataDisplay = ({ data, userObject }) => {
         <div
           className="w-1/4 chart-card relative z-50"
           onClick={() =>
+            openModalWithChart(<ListPick data={data} userObject={userObject} />)
+          }
+        >
+          <ListPick data={data} userObject={userObject} />
+        </div>
+        <div
+          className="w-1/4 chart-card relative z-50"
+          onClick={() =>
             openModalWithChart(
               <FluidLoadPalletPick data={data} userObject={userObject} />
             )
@@ -112,6 +122,20 @@ const DataDisplay = ({ data, userObject }) => {
           }
         >
           <TrailerLoad data={data} userObject={userObject} />
+        </div>
+        <div
+          className="w-1/4 chart-card relative z-50"
+          onClick={() =>
+            openModalWithChart(
+              <ItemsShipped
+                data={data}
+                userObject={userObject}
+                isInModal={true}
+              />
+            )
+          }
+        >
+          <ItemsShipped data={data} userObject={userObject} />
         </div>
         {isModalOpen && (
           <Modal onClose={() => setIsModalOpen(false)}>{currentChart}</Modal>
