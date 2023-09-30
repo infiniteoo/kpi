@@ -102,7 +102,7 @@ const itemsShipped = ({ data, userObject, isInModal }) => {
   }, [data]);
 
   return (
-    <div>
+    <div className="bg-gray-100 z-50">
       {chartData ? (
         <>
           <div
@@ -117,8 +117,8 @@ const itemsShipped = ({ data, userObject, isInModal }) => {
           </div>
           <div
             style={{
-              width: isInModal ? "600px" : "200px",
-              height: isInModal ? "600px" : "200px",
+              width: isInModal ? "600px" : "250px",
+              height: isInModal ? "600px" : "250px",
               margin: "auto",
             }}
           >

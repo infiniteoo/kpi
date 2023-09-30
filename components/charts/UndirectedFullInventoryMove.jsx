@@ -116,7 +116,7 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-gray-100 z-50">
       {chartData ? (
         <>
           <div

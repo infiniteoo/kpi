@@ -56,7 +56,7 @@ export default function Home() {
         {dataFinallyLoaded && <Header />}
 
         <DataDisplay data={data} userObject={userObject} />
-        <div style={{ position: 'fixed', zIndex: -10 }}>
+        <div className="z-0" style={{ position: 'fixed', zIndex: -1000 }}>
           <ParticleDisplay />
         </div>
       </main>

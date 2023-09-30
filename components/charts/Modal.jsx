@@ -11,7 +11,7 @@ const Modal = ({ children, onClose }) => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1000,
+    zIndex: 100,
   };
 
   const modalStyle = {

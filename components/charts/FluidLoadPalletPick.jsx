@@ -13,7 +13,7 @@ import {
   PointElement,
 } from "chart.js";
 
-import { Line } from "react-chartjs-2"; // Import Line instead of Bar
+import { Bar } from "react-chartjs-2";
 
 // Registering the required pieces for Line chart
 ChartJS.register(
@@ -46,8 +46,13 @@ const FluidLoadPalletPick = ({ data, userObject }) => {
   ];
 
   const options = {
+    indexAxis: "y", // To make the bar chart horizontal.
     responsive: true,
-    tension: 0.4,
+    scales: {
+      x: {
+        beginAtZero: true,
+      },
+    },
     plugins: {
       legend: {
         display: false,
@@ -60,26 +65,9 @@ const FluidLoadPalletPick = ({ data, userObject }) => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            return `Count: ${context.parsed.y}`;
+            return `Count: ${context.parsed.x}`;
           },
         },
-      },
-    },
-    scales: {
-      x: {
-        beginAtZero: true,
-      },
-      y: {
-        beginAtZero: true,
-      },
-    },
-    elements: {
-      point: {
-        radius: 5,
-        hoverRadius: 7,
-        pointStyle: "circle",
-        backgroundColor: colors.map((color) => color.replace("0.6", "1")), // Solid color for points
-        hoverBackgroundColor: "rgba(0,0,0,0.9)", // Different color when a user hovers over a point
       },
     },
   };
@@ -94,8 +82,10 @@ const FluidLoadPalletPick = ({ data, userObject }) => {
       }
       return acc;
     }, {});
-    let earliestDate = new Date(filteredData[0]?.date);
-    let latestDate = new Date(filteredData[0]?.date);
+    let earliestDate =
+      filteredData.length > 0 ? new Date(filteredData[0]?.date) : new Date();
+    let latestDate =
+      filteredData.length > 0 ? new Date(filteredData[0]?.date) : new Date();
 
     filteredData.forEach((item) => {
       const currentDate = new Date(item.date);
@@ -103,10 +93,16 @@ const FluidLoadPalletPick = ({ data, userObject }) => {
       if (currentDate > latestDate) latestDate = currentDate;
     });
 
-    // Formatting the dates
-    const formattedEarliestDate = format(earliestDate, "MMMM do yyyy, h:mm a");
-    const formattedLatestDate = format(latestDate, "MMMM do yyyy, h:mm a");
+    // Check if earliestDate and latestDate are valid dates before formatting.
+    const formattedEarliestDate =
+      earliestDate instanceof Date && !isNaN(earliestDate)
+        ? format(earliestDate, "MMMM do yyyy, h:mm a")
+        : "Invalid Date";
 
+    const formattedLatestDate =
+      latestDate instanceof Date && !isNaN(latestDate)
+        ? format(latestDate, "MMMM do yyyy, h:mm a")
+        : "Invalid Date";
     setDateRange(`${formattedEarliestDate} - ${formattedLatestDate}`);
     // Convert to array, sort, and create labels and data arrays.
     const sortedUsers = Object.entries(userCounts)
@@ -140,24 +136,13 @@ const FluidLoadPalletPick = ({ data, userObject }) => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-gray-100 z-50">
       {chartData ? (
         <>
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: "14px",
-            }}
-          >
+          <div style={{ textAlign: "center", fontSize: "14px" }}>
             Fluid Load
           </div>
-          <div style={{ position: "relative", zIndex: 50 }}>
-            <Line
-              data={chartData}
-              options={options}
-              style={{ position: "relative", zIndex: 50 }}
-            />
-          </div>
+          <Bar data={chartData} options={options} />{" "}
         </>
       ) : (
         <Loading />

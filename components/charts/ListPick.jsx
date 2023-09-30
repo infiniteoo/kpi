@@ -113,7 +113,7 @@ const ListPick = ({ data, userObject }) => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-gray-100 z-50">
       {chartData ? (
         <>
           <div
@@ -135,7 +135,7 @@ const ListPick = ({ data, userObject }) => {
                   beginAtZero: true,
                   ticks: {
                     font: {
-                      size: 14, // adjust this value for x-axis labels
+                      size: 14,
                     },
                   },
                 },

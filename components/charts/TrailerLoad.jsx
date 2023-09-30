@@ -138,7 +138,7 @@ const TrailerLoad = ({ data, userObject }) => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-gray-100 z-50">
       {chartData ? (
         <>
           <div style={{ textAlign: "center", fontSize: "14px" }}>

@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import Particles from "react-particles";
-import { loadSlim } from "tsparticles-slim"; // if you are going to use `loadSlim`, install the "tsparticles-slim" package too.
+import { loadSlim } from "tsparticles-slim";
 
 const ParticleDisplay = () => {
   const particlesInit = useCallback(async (engine) => {
@@ -24,7 +24,7 @@ const ParticleDisplay = () => {
         left: "0",
         width: "100%",
         height: "100%",
-        zIndex: "-10", // Ensure it's below your content
+        zIndex: "-10", //
       }}
       options={{
         background: {
