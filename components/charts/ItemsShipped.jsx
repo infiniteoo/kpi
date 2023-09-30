@@ -117,8 +117,8 @@ const itemsShipped = ({ data, userObject, isInModal }) => {
           </div>
           <div
             style={{
-              width: isInModal ? "600px" : "250px",
-              height: isInModal ? "600px" : "250px",
+              width: isInModal ? "600px" : "200px",
+              height: isInModal ? "600px" : "200px",
               margin: "auto",
             }}
           >

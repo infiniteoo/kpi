@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
 import logo from "../public/keyperformance.png";
+import UploadCSV from "./UploadCSV";
 
 const Navbar = styled.div`
   display: flex;
@@ -39,6 +40,7 @@ const Header = () => {
       <LogoContainer>
         <Logo src={logo} alt="Logo" width={120} height={60} />
       </LogoContainer>
+      <UploadCSV />
       <NavLinks>
         <a href="#">Home</a>
         <a href="#">About</a>

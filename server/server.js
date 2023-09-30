@@ -6,7 +6,7 @@ const path = require('path')
 const cors = require('cors')
 app.use(cors())
 
-// Enable CORS for all routes
+/* // Enable CORS for all routes
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*') // Adjust this based on your requirements
   res.setHeader(
@@ -18,7 +18,8 @@ app.use((req, res, next) => {
     'Origin, X-Requested-With, Content-Type, Accept',
   )
   next()
-})
+}) */
+
 // Middleware setup
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -26,31 +27,6 @@ app.use(express.static('public'))
 
 // Serve static files from the "public" directory
 app.use(express.static('public'))
-
-function excelDateToJSDate(excelDate) {
-  return new Date(
-    (excelDate - 1) * 24 * 60 * 60 * 1000 + new Date('1900-01-01').getTime(),
-  )
-}
-
-function excelTimeToFormattedTime(excelTime) {
-  if (excelTime < 1) {
-    const hours = Math.floor(excelTime * 24)
-    const minutes = Math.round((excelTime * 24 - hours) * 60)
-    const formattedTime = `${hours
-      .toString()
-      .padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
-    return formattedTime
-  } else {
-    return '' // Handle other cases as needed
-  }
-}
-
-function excelDateToJSDate(excelDate) {
-  return new Date(
-    (excelDate - 1) * 24 * 60 * 60 * 1000 + new Date('1900-01-01').getTime(),
-  )
-}
 
 app.get('/api/excel', async (req, res) => {
   console.log('hello from api excel')
