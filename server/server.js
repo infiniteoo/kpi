@@ -29,7 +29,6 @@ app.use(express.static('public'))
 app.use(express.static('public'))
 
 app.get('/api/excel', async (req, res) => {
-  console.log('hello from api excel')
   const filePath = path.join(__dirname, '/inventory.csv')
   const workbook = XLSX.readFile(filePath)
 

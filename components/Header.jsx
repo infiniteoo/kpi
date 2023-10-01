@@ -11,6 +11,7 @@ const Navbar = styled.div`
   background-color: #ffffff;
   box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
+  height: auto;
 `;
 
 const LogoContainer = styled.div`
@@ -38,7 +39,9 @@ const Header = () => {
   return (
     <Navbar>
       <LogoContainer>
-        <Logo src={logo} alt="Logo" width={120} height={60} />
+        <div style={{ width: "120px", height: "auto" }}>
+          <Logo src={logo} alt="Logo" />
+        </div>
       </LogoContainer>
       <UploadCSV />
       <NavLinks>

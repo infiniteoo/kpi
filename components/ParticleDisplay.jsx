@@ -4,13 +4,11 @@ import { loadSlim } from "tsparticles-slim";
 
 const ParticleDisplay = () => {
   const particlesInit = useCallback(async (engine) => {
-    console.log(engine);
-
     await loadSlim(engine);
   }, []);
 
   const particlesLoaded = useCallback(async (container) => {
-    await console.log(container);
+    /*  await console.log(container); */
   }, []);
 
   return (
