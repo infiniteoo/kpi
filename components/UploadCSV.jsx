@@ -8,6 +8,7 @@ const UploadCSV = () => {
   const [fileSelected, setFileSelected] = useState(false);
 
   const handleFileUpload = (e) => {
+    e.preventDefault(); // Prevent the default form submission
     const file = e.target.files[0];
 
     if (!file) {
@@ -15,11 +16,17 @@ const UploadCSV = () => {
       return;
     }
 
+    // Create a new FormData object
     const formData = new FormData();
-    formData.append("uploadedFile", file);
+    formData.append("uploadedFile", file); // Append the file to the FormData object
 
+    // Send the file to the server
     axios
-      .post("/api/excel/uploaded-file", formData)
+      .post("http://localhost:5000/api/uploaded-file", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Specify the content type as form data
+        },
+      })
       .then((response) => {
         console.log("File uploaded and processed successfully:", response.data);
         setCsvData(response.data);

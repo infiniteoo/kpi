@@ -4,9 +4,12 @@ const port = process.env.PORT || 5000
 const XLSX = require('xlsx')
 const path = require('path')
 const cors = require('cors')
+const multer = require('multer')
+const upload = multer({ dest: 'uploads/' }) // This specifies the directory where uploaded files will be stored.
+
 app.use(cors())
 
-/* // Enable CORS for all routes
+// Enable CORS for all routes
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*') // Adjust this based on your requirements
   res.setHeader(
@@ -18,15 +21,17 @@ app.use((req, res, next) => {
     'Origin, X-Requested-With, Content-Type, Accept',
   )
   next()
-}) */
+})
 
 // Middleware setup
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 
-// Serve static files from the "public" directory
-app.use(express.static('public'))
+app.post('/api/uploaded-file', upload.single('uploadedFile'), (req, res) => {
+  console.log('req.file: ', req.file) // This will log the uploaded file's details.
+  res.send('File received')
+})
 
 app.get('/api/excel', async (req, res) => {
   const filePath = path.join(__dirname, '/inventory.csv')
