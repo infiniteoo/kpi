@@ -16,6 +16,10 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
   color: rgb(var(--foreground-rgb));
@@ -50,4 +54,9 @@ body {
 .chart-card:hover {
   transform: scale(1.05);
   box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.2);
+}
+
+.section-title {
+  padding-top: 100px; /* Adjust this value to the height of your header */
+  margin-top: -100px; /* This should be the negative value of padding-top */
 }

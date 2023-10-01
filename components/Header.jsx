@@ -12,6 +12,9 @@ const Navbar = styled.div`
   box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   height: auto;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 `;
 
 const LogoContainer = styled.div`
@@ -45,9 +48,9 @@ const Header = ({ setData }) => {
       </LogoContainer>
       <UploadCSV setData={setData} />
       <NavLinks>
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
+        <a href="#stats">Stats</a>
+        <a href="#profiles">Profiles</a>
+        <a href="#inventory">Inventory</a>
       </NavLinks>
     </Navbar>
   );

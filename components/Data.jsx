@@ -187,7 +187,7 @@ const DataDisplay = ({ data, userObject }) => {
           </div>
         </div>
       </div>
-      <div className="flex justify-center mb-2">
+      <div className="flex justify-center mb-2 section-title" id="stats">
         <h1 className="text-2xl font-bold text-center">Overall User Stats</h1>
       </div>
 
@@ -274,8 +274,41 @@ const DataDisplay = ({ data, userObject }) => {
         </div>
       </div>
 
-      <div className="flex justify-center mb-2 mt-10">
-        <h1 className="text-2xl font-bold text-center">Individual Profiles</h1>
+      <div
+        className="flex justify-center mb-2 mt-10 section-title"
+        id="inventory"
+      >
+        <h1 className="text-2xl font-bold text-center mt-10">
+          Inventory Stats
+        </h1>
+      </div>
+      <div
+        className="flex flex-wrap justify-center w-full gap-8 relative z-50"
+        style={{ zIndex: 50, position: "relative" }}
+      >
+        <div
+          className="w-1/4 chart-card relative z-50"
+          onClick={() =>
+            openModalWithChart(
+              <ItemsShipped
+                data={filteredData}
+                userObject={userObject}
+                isInModal={true}
+              />
+            )
+          }
+        >
+          <ItemsShipped data={filteredData} userObject={userObject} />
+        </div>
+      </div>
+
+      <div
+        className="flex justify-center mb-2 mt-10 section-title"
+        id="profiles"
+      >
+        <h1 className="text-2xl font-bold text-center mt-10">
+          Individual Profiles
+        </h1>
       </div>
       <div
         className="flex flex-wrap justify-center w-full gap-8 relative z-50"
@@ -328,31 +361,6 @@ const DataDisplay = ({ data, userObject }) => {
             </p>
           </div>
         ))}
-        In this modification, index + 1 is used to display the rank because the
-        index is zero-based. So, for the first user, the index will be 0, and we
-        add 1 to display it as rank 1.
-      </div>
-      <div className="flex justify-center mb-2 mt-10">
-        <h1 className="text-2xl font-bold text-center">Inventory Stats</h1>
-      </div>
-      <div
-        className="flex flex-wrap justify-center w-full gap-8 relative z-50"
-        style={{ zIndex: 50, position: "relative" }}
-      >
-        <div
-          className="w-1/4 chart-card relative z-50"
-          onClick={() =>
-            openModalWithChart(
-              <ItemsShipped
-                data={filteredData}
-                userObject={userObject}
-                isInModal={true}
-              />
-            )
-          }
-        >
-          <ItemsShipped data={filteredData} userObject={userObject} />
-        </div>
       </div>
 
       {isModalOpen && (
