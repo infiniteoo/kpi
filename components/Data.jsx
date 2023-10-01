@@ -16,6 +16,7 @@ const DataDisplay = ({ data, userObject }) => {
   const [selectedWeek, setSelectedWeek] = useState(null);
   const [weeks, setWeeks] = useState([]);
   const [filteredData, setFilteredData] = useState(data || []);
+  const [selectedDay, setSelectedDay] = useState(null);
 
   useEffect(() => {
     if (!data || data.length === 0) return;
@@ -45,18 +46,25 @@ const DataDisplay = ({ data, userObject }) => {
   }, [data]);
 
   useEffect(() => {
-    if (selectedWeek !== null) {
-      const week = weeks[selectedWeek];
+    if (selectedDay !== null) {
       setFilteredData(
-        data.filter(
-          (item) =>
-            new Date(item.date) >= week.start && new Date(item.date) <= week.end
+        filteredData.filter(
+          (item) => format(new Date(item.date), "MMMM do yyyy") === selectedDay
         )
       );
     } else {
-      setFilteredData(data); // If no week is selected, show all data
+      // Reset to the data of the selected week or all data if no week is selected
+      setFilteredData(
+        selectedWeek !== null
+          ? data.filter(
+              (item) =>
+                new Date(item.date) >= weeks[selectedWeek].start &&
+                new Date(item.date) <= weeks[selectedWeek].end
+            )
+          : data
+      );
     }
-  }, [selectedWeek, data, weeks]);
+  }, [selectedDay, selectedWeek, data, weeks]);
 
   const openModalWithChart = (chart) => {
     setCurrentChart(chart);
@@ -87,6 +95,33 @@ const DataDisplay = ({ data, userObject }) => {
               {format(week.end, "MMMM do yyyy")}
             </option>
           ))}
+        </select>
+      </div>
+      <div>
+        <select
+          onChange={(e) =>
+            setSelectedDay(e.target.value === "all" ? null : e.target.value)
+          }
+          defaultValue="placeholder"
+        >
+          <option value="placeholder" disabled hidden>
+            Select Day
+          </option>
+          <option value="all">Show All</option>
+          {/* Populate the dropdown with the unique days from the filteredData */}
+          {[
+            ...new Set(
+              filteredData.map((item) =>
+                format(new Date(item.date), "MMMM do yyyy")
+              )
+            ),
+          ]
+            .sort((a, b) => new Date(a) - new Date(b))
+            .map((day, index) => (
+              <option key={index} value={day}>
+                {day}
+              </option>
+            ))}
         </select>
       </div>
       <div
