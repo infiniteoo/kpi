@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import axios from "axios";
 
-const UploadCSV = () => {
+const UploadCSV = ({ setData }) => {
   const [csvData, setCsvData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [fileSelected, setFileSelected] = useState(false);
@@ -15,6 +15,7 @@ const UploadCSV = () => {
       setErrorMessage("Please select a CSV file.");
       return;
     }
+    setFileSelected(true);
 
     // Create a new FormData object
     const formData = new FormData();
@@ -28,10 +29,10 @@ const UploadCSV = () => {
         },
       })
       .then((response) => {
-        console.log("File uploaded and processed successfully:", response.data);
         setCsvData(response.data);
         setErrorMessage("");
-        setFileSelected(true);
+        setFileSelected(false);
+        setData(response.data);
       })
       .catch((error) => {
         console.error("Error uploading file:", error);

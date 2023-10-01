@@ -35,7 +35,7 @@ const NavLinks = styled.div`
   font-size: 16px;
 `;
 
-const Header = () => {
+const Header = ({ setData }) => {
   return (
     <Navbar>
       <LogoContainer>
@@ -43,7 +43,7 @@ const Header = () => {
           <Logo src={logo} alt="Logo" priority />
         </div>
       </LogoContainer>
-      <UploadCSV />
+      <UploadCSV setData={setData} />
       <NavLinks>
         <a href="#">Home</a>
         <a href="#">About</a>
