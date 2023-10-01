@@ -8,6 +8,7 @@ import TrailerLoad from "./charts/TrailerLoad";
 import ListPick from "./charts/ListPick";
 import ItemsShipped from "./charts/ItemsShipped";
 import NonTrustedASNUndirectedReceive from "./charts/NonTrustedASNUndirectedReceive";
+import { calculateUserProfiles } from "../utils/userProfiles";
 
 import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
 
@@ -19,6 +20,12 @@ const DataDisplay = ({ data, userObject }) => {
   const [weeks, setWeeks] = useState([]);
   const [filteredData, setFilteredData] = useState(data || []);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [userProfiles, setUserProfiles] = useState({});
+
+  useEffect(() => {
+    const profiles = calculateUserProfiles(userObject);
+    setUserProfiles(profiles);
+  }, [userObject]);
 
   useEffect(() => {
     if (!data || data.length === 0) return;
@@ -72,6 +79,7 @@ const DataDisplay = ({ data, userObject }) => {
     setCurrentChart(chart);
     setIsModalOpen(true);
   };
+
   if (!filteredData || filteredData.length === 0) return <Loading />;
 
   return (
@@ -221,6 +229,33 @@ const DataDisplay = ({ data, userObject }) => {
         </div>
       </div>
 
+      <div className="flex justify-center mb-2 mt-10">
+        <h1 className="text-2xl font-bold text-center">Individual Profiles</h1>
+      </div>
+      <div
+        className="flex flex-wrap justify-center w-full gap-8 relative z-50"
+        style={{ zIndex: 50, position: "relative" }}
+      >
+        {Object.keys(userProfiles).map((user) => (
+          <div key={user} className="w-1/4 p-4 bg-white shadow-md rounded-md">
+            <h2 className="text-xl font-bold mb-2">{user}</h2>
+            <p>Total Actions: {userProfiles[user].totalActions}</p>
+            <p>
+              Average Time Between Actions:{" "}
+              {userProfiles[user].averageTimeBetweenActions} ms
+            </p>
+            <p>Pallet Picks: {userProfiles[user].palletPicks}</p>
+            <p>
+              Undirected Full Inventory Moves:{" "}
+              {userProfiles[user].undirectedFullInventoryMoves}
+            </p>
+            <p>Fluid Loads: {userProfiles[user].fluidLoads}</p>
+            <p>List Picks: {userProfiles[user].listPicks}</p>
+            <p>Trailer Loads: {userProfiles[user].trailerLoads}</p>
+            <p>ASN Receives: {userProfiles[user].asnReceives}</p>
+          </div>
+        ))}
+      </div>
       <div className="flex justify-center mb-2 mt-10">
         <h1 className="text-2xl font-bold text-center">Inventory Stats</h1>
       </div>
