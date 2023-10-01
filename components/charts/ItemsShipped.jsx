@@ -111,6 +111,7 @@ const itemsShipped = ({ data, userObject, isInModal }) => {
               fontSize: "14px",
               position: "relative",
               zIndex: 50,
+              backgroundColor: "white",
             }}
           >
             Item Numbers Shipped
@@ -136,9 +137,7 @@ const itemsShipped = ({ data, userObject, isInModal }) => {
             />
           </div>
         </>
-      ) : (
-        <Loading />
-      )}
+      ) : null}
     </div>
   );
 };

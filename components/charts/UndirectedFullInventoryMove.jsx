@@ -125,6 +125,7 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
               fontSize: "14px",
               position: "relative",
               zIndex: 50,
+              backgroundColor: "white",
             }}
           >
             Undirected Full Inventory Move
@@ -159,9 +160,7 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
             }}
           />
         </>
-      ) : (
-        <Loading />
-      )}
+      ) : null}
     </div>
   );
 };

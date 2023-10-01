@@ -35,7 +35,7 @@ export default function Home() {
 
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-around relative z-50 ">
+      <main className="flex min-h-screen flex-col justify-around relative z-50 ">
         {dataFinallyLoaded && <Header setData={setData} />}
 
         <DataDisplay data={data} userObject={userObject} />

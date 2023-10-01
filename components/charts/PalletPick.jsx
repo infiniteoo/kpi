@@ -102,6 +102,7 @@ const PalletPick = ({ data, userObject }) => {
             style={{
               textAlign: "center",
               fontSize: "14px",
+              backgroundColor: "white",
             }}
           >
             Pallet Picks
@@ -131,9 +132,7 @@ const PalletPick = ({ data, userObject }) => {
             }}
           />
         </>
-      ) : (
-        <Loading />
-      )}
+      ) : null}
     </div>
   );
 };

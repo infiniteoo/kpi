@@ -122,6 +122,7 @@ const ListPick = ({ data, userObject }) => {
               fontSize: "14px",
               position: "relative",
               zIndex: 50,
+              backgroundColor: "white",
             }}
           >
             List Pick
@@ -156,9 +157,7 @@ const ListPick = ({ data, userObject }) => {
             }}
           />
         </>
-      ) : (
-        <Loading />
-      )}
+      ) : null}
     </div>
   );
 };

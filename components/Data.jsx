@@ -74,55 +74,61 @@ const DataDisplay = ({ data, userObject }) => {
 
   return (
     <>
-      <div>
-        <select
-          onChange={(e) => {
-            if (e.target.value === "all") {
-              setSelectedWeek(null);
-            } else {
-              setSelectedWeek(Number(e.target.value));
-            }
-          }}
-          defaultValue="placeholder" // Set the default value to the placeholder value
-        >
-          <option value="placeholder" disabled hidden>
-            Select Week
-          </option>
-          <option value="all">Show All</option>
-          {weeks.map((week, index) => (
-            <option key={index} value={index}>
-              {format(week.start, "MMMM do yyyy")} -{" "}
-              {format(week.end, "MMMM do yyyy")}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <select
-          onChange={(e) =>
-            setSelectedDay(e.target.value === "all" ? null : e.target.value)
-          }
-          defaultValue="placeholder"
-        >
-          <option value="placeholder" disabled hidden>
-            Select Day
-          </option>
-          <option value="all">Show All</option>
-          {/* Populate the dropdown with the unique days from the filteredData */}
-          {[
-            ...new Set(
-              filteredData.map((item) =>
-                format(new Date(item.date), "MMMM do yyyy")
-              )
-            ),
-          ]
-            .sort((a, b) => new Date(a) - new Date(b))
-            .map((day, index) => (
-              <option key={index} value={day}>
-                {day}
+      <div className="flex justify-around space-x-4 mb-4">
+        <div></div>
+        <div></div>
+        <div className="flex flex-row  space-x-4 mb-4">
+          <div>
+            <select
+              onChange={(e) => {
+                if (e.target.value === "all") {
+                  setSelectedWeek(null);
+                } else {
+                  setSelectedWeek(Number(e.target.value));
+                }
+              }}
+              defaultValue="placeholder" // Set the default value to the placeholder value
+            >
+              <option value="placeholder" disabled hidden>
+                Select Week
               </option>
-            ))}
-        </select>
+              <option value="all">Show All</option>
+              {weeks.map((week, index) => (
+                <option key={index} value={index}>
+                  {format(week.start, "MMMM do yyyy")} -{" "}
+                  {format(week.end, "MMMM do yyyy")}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <select
+              onChange={(e) =>
+                setSelectedDay(e.target.value === "all" ? null : e.target.value)
+              }
+              defaultValue="placeholder"
+            >
+              <option value="placeholder" disabled hidden>
+                Select Day
+              </option>
+              <option value="all">Show All</option>
+              {/* Populate the dropdown with the unique days from the filteredData */}
+              {[
+                ...new Set(
+                  filteredData.map((item) =>
+                    format(new Date(item.date), "MMMM do yyyy")
+                  )
+                ),
+              ]
+                .sort((a, b) => new Date(a) - new Date(b))
+                .map((day, index) => (
+                  <option key={index} value={day}>
+                    {day}
+                  </option>
+                ))}
+            </select>
+          </div>
+        </div>
       </div>
       <div
         className="flex flex-wrap justify-center w-full gap-8 relative z-50"

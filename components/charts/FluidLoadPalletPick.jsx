@@ -139,14 +139,18 @@ const FluidLoadPalletPick = ({ data, userObject }) => {
     <div className="bg-gray-100 z-50">
       {chartData ? (
         <>
-          <div style={{ textAlign: "center", fontSize: "14px" }}>
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: "14px",
+              backgroundColor: "white",
+            }}
+          >
             Fluid Load
           </div>
           <Bar data={chartData} options={options} />{" "}
         </>
-      ) : (
-        <Loading />
-      )}
+      ) : null}
     </div>
   );
 };
