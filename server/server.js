@@ -34,8 +34,6 @@ app.post(
   upload.single('uploadedFile'),
   async (req, res) => {
     try {
-      /*  console.log('req.file: ', req.file) // This will log the uploaded file's details. */
-
       if (!req.file) {
         return res.status(400).send('No file uploaded')
       }
@@ -56,7 +54,11 @@ app.post(
       }
 
       const formattedData = excelData.map((row) => {
-        const [date, time, user] = row[0].split(' ')
+        const parts = row[0].split(' ')
+        const [date, time] = parts
+        const [meridian, ...userParts] = parts[2].split('\n') // Split the meridian and user using '\n'
+        const user = userParts.join(' ').trim() // Join the user parts back together and trim any extra spaces
+
         let strippedUser = (user.match(/[A-Z]+/g) || []).join('')
         const [activity, operation] = row[1].split('\n')
         const item = row[2]
@@ -143,7 +145,7 @@ app.post(
 
         return {
           date,
-          time,
+          time: `${time} ${meridian}`,
           user: strippedUser,
           activity,
           operation,
