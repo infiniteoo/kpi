@@ -40,7 +40,7 @@ const Header = () => {
     <Navbar>
       <LogoContainer>
         <div style={{ width: "120px", height: "auto" }}>
-          <Logo src={logo} alt="Logo" />
+          <Logo src={logo} alt="Logo" priority />
         </div>
       </LogoContainer>
       <UploadCSV />
