@@ -24,19 +24,18 @@ const DataDisplay = ({ data, userObject }) => {
 
   useEffect(() => {
     const profiles = calculateUserProfiles(userObject);
+
     const weights = {
       totalActions: 1,
-      avgTimeBetweenActions: -0.5, // Negative because lower is better
-      palletPicks: -0.4,
-      undirectedFullInventoryMoves: -0.3,
-      fluidLoads: -0.9,
-      listPicks: -0.7,
-      trailerLoads: -0.8,
-      asnReceives: -0.6,
-
-      // ... other weights ...
+      avgTimeBetweenActions: 1,
+      palletPicks: 1,
+      undirectedFullInventoryMoves: 1,
+      fluidLoads: 1,
+      listPicks: 1,
+      trailerLoads: 1,
+      asnReceives: 1,
     };
-    // Calculate scores for each user
+
     // Calculate scores for each user
     const scoredProfiles = Object.entries(profiles).map(([user, profile]) => {
       let score = 0;
@@ -52,7 +51,7 @@ const DataDisplay = ({ data, userObject }) => {
       score += profile.listPicks * weights.listPicks;
       score += profile.trailerLoads * weights.trailerLoads;
       score += profile.asnReceives * weights.asnReceives;
-      // ... other scores ...
+
       return { user, score, ...profile };
     });
 

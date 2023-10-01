@@ -22,10 +22,35 @@ export default function Home() {
         let result = await axios.get('http://localhost:5000/api/excel')
         setLoading(false)
         setDataFinallyLoaded(true)
-        setData(result.data)
-        let compiledUserObject = separateByUser(result.data)
+        const filteredData = result.data.filter(
+          (item) =>
+            ![
+              'ACONKLE',
+              'EPARK',
+              'CTYNDALL',
+              'BNELSEN',
+              'KSILVERS',
+              'GBRENNAN',
+            ].includes(item.user),
+        )
+        setData(filteredData)
+        let compiledUserObject = separateByUser(filteredData)
 
-        setUserObject(compiledUserObject)
+        const filteredUserObject = Object.fromEntries(
+          Object.entries(compiledUserObject).filter(
+            ([key]) =>
+              ![
+                'ACONKLE',
+                'EPARK',
+                'CTYNDALL',
+                'BNELSEN',
+                'KSILVERS',
+                'GBRENNAN',
+              ].includes(key),
+          ),
+        )
+
+        setUserObject(filteredUserObject)
       } catch (error) {
         console.error('Error fetching data: ', error)
       }
