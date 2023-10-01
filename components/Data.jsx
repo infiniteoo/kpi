@@ -8,6 +8,7 @@ import TrailerLoad from "./charts/TrailerLoad";
 import ListPick from "./charts/ListPick";
 import ItemsShipped from "./charts/ItemsShipped";
 import NonTrustedASNUndirectedReceive from "./charts/NonTrustedASNUndirectedReceive";
+import PalletPickByDate from "./charts/PalletPickByDate";
 import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
 
 const DataDisplay = ({ data, userObject }) => {
@@ -220,7 +221,7 @@ const DataDisplay = ({ data, userObject }) => {
         </div>
       </div>
       <div className="flex justify-center mb-2 mt-10">
-        <h1 className="text-2xl font-bold text-center">Inventory Stats</h1>
+        <h1 className="text-2xl font-bold text-center">Stats By Shift</h1>
       </div>
       <div
         className="flex flex-wrap justify-center w-full gap-8 relative z-50"
@@ -230,7 +231,7 @@ const DataDisplay = ({ data, userObject }) => {
           className="w-1/4 chart-card relative z-50"
           onClick={() =>
             openModalWithChart(
-              <ItemsShipped
+              <PalletPickByDate
                 data={filteredData}
                 userObject={userObject}
                 isInModal={true}
@@ -238,13 +239,11 @@ const DataDisplay = ({ data, userObject }) => {
             )
           }
         >
-          <ItemsShipped data={filteredData} userObject={userObject} />
+          <PalletPickByDate data={filteredData} userObject={userObject} />
         </div>
       </div>
       <div className="flex justify-center mb-2 mt-10">
-        <h1 className="text-2xl font-bold text-center">
-          PLACEHOLDER FOR 3rd GROUP
-        </h1>
+        <h1 className="text-2xl font-bold text-center">Inventory Stats</h1>
       </div>
       <div
         className="flex flex-wrap justify-center w-full gap-8 relative z-50"
