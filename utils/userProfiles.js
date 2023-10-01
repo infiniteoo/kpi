@@ -1,3 +1,10 @@
+export const convertMillisecondsToReadableTime = (milliseconds) => {
+  const totalSeconds = Math.floor(milliseconds / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${minutes}m ${seconds}s`
+}
+
 export const calculateUserProfiles = (userObject) => {
   const userProfiles = {}
 
@@ -6,6 +13,9 @@ export const calculateUserProfiles = (userObject) => {
       const actions = userObject[user]
 
       let totalActions = 0
+      let totalDays = 0
+      let totalDailyAverageTimeBetweenActions = 0
+      let actionsByDay = {}
       let totalTimeBetweenActions = 0
       let lastActionTime = null
       let palletPicks = 0
@@ -17,7 +27,9 @@ export const calculateUserProfiles = (userObject) => {
 
       actions.forEach((action) => {
         totalActions++
-
+        const date = action.date
+        if (!actionsByDay[date]) actionsByDay[date] = []
+        actionsByDay[date].push(action)
         // Combine date and time and convert to Date object
         const actionDateTime = new Date(`${action.date} ${action.time}`)
 
@@ -51,12 +63,36 @@ export const calculateUserProfiles = (userObject) => {
         }
       })
 
+      for (const date in actionsByDay) {
+        const dailyActions = actionsByDay[date].sort(
+          (a, b) =>
+            new Date(`${a.date} ${a.time}`) - new Date(`${b.date} ${b.time}`),
+        )
+        let dailyTotalTimeBetweenActions = 0
+        for (let i = 1; i < dailyActions.length; i++) {
+          const timeDifference =
+            new Date(`${dailyActions[i].date} ${dailyActions[i].time}`) -
+            new Date(`${dailyActions[i - 1].date} ${dailyActions[i - 1].time}`)
+          dailyTotalTimeBetweenActions += timeDifference
+        }
+        const dailyAverageTimeBetweenActions =
+          dailyActions.length > 1
+            ? dailyTotalTimeBetweenActions / (dailyActions.length - 1)
+            : 0
+        totalDailyAverageTimeBetweenActions += dailyAverageTimeBetweenActions
+        totalDays++
+      }
+
       const averageTimeBetweenActions =
-        totalActions > 1 ? totalTimeBetweenActions / (totalActions - 1) : 0
+        totalDays > 0
+          ? convertMillisecondsToReadableTime(
+              totalDailyAverageTimeBetweenActions / totalDays,
+            )
+          : '0m 0s'
 
       userProfiles[user] = {
         totalActions,
-        averageTimeBetweenActions,
+        averageTimeBetweenActions, // This will now be a string in the format "Xm Ys"
         palletPicks,
         undirectedFullInventoryMoves,
         fluidLoads,

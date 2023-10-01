@@ -24,7 +24,40 @@ const DataDisplay = ({ data, userObject }) => {
 
   useEffect(() => {
     const profiles = calculateUserProfiles(userObject);
-    setUserProfiles(profiles);
+    const weights = {
+      totalActions: 1,
+      avgTimeBetweenActions: -0.5, // Negative because lower is better
+      palletPicks: -0.4,
+      undirectedFullInventoryMoves: -0.3,
+      fluidLoads: -0.9,
+      listPicks: -0.7,
+      trailerLoads: -0.8,
+      asnReceives: -0.6,
+
+      // ... other weights ...
+    };
+    // Calculate scores for each user
+    // Calculate scores for each user
+    const scoredProfiles = Object.entries(profiles).map(([user, profile]) => {
+      let score = 0;
+      score += profile.totalActions * weights.totalActions;
+      score +=
+        convertToSeconds(profile.averageTimeBetweenActions) *
+        weights.avgTimeBetweenActions;
+      score += profile.palletPicks * weights.palletPicks;
+      score +=
+        profile.undirectedFullInventoryMoves *
+        weights.undirectedFullInventoryMoves;
+      score += profile.fluidLoads * weights.fluidLoads;
+      score += profile.listPicks * weights.listPicks;
+      score += profile.trailerLoads * weights.trailerLoads;
+      score += profile.asnReceives * weights.asnReceives;
+      // ... other scores ...
+      return { user, score, ...profile };
+    });
+
+    const rankedProfiles = scoredProfiles.sort((a, b) => b.score - a.score);
+    setUserProfiles(rankedProfiles);
   }, [userObject]);
 
   useEffect(() => {
@@ -79,6 +112,19 @@ const DataDisplay = ({ data, userObject }) => {
     setCurrentChart(chart);
     setIsModalOpen(true);
   };
+
+  function convertToSeconds(timeStr) {
+    const parts = timeStr.split(" ");
+    let seconds = 0;
+    parts.forEach((part) => {
+      if (part.endsWith("m")) {
+        seconds += parseInt(part) * 60; // convert minutes to seconds
+      } else if (part.endsWith("s")) {
+        seconds += parseInt(part); // add seconds
+      }
+    });
+    return seconds;
+  }
 
   if (!filteredData || filteredData.length === 0) return <Loading />;
 
@@ -236,25 +282,56 @@ const DataDisplay = ({ data, userObject }) => {
         className="flex flex-wrap justify-center w-full gap-8 relative z-50"
         style={{ zIndex: 50, position: "relative" }}
       >
-        {Object.keys(userProfiles).map((user) => (
-          <div key={user} className="w-1/4 p-4 bg-white shadow-md rounded-md">
-            <h2 className="text-xl font-bold mb-2">{user}</h2>
-            <p>Total Actions: {userProfiles[user].totalActions}</p>
+        {userProfiles.map((profile, index) => (
+          <div
+            key={profile.user}
+            className="w-1/4 p-4 bg-white shadow-md rounded-md flex flex-col items-center"
+          >
+            <div className="flex items-center mb-4">
+              <img
+                src="/profile_placeholder.jpg"
+                alt="Profile Placeholder"
+                className="w-16 h-16 rounded-full"
+              />
+              <div className="ml-4 text-center">
+                <h2 className="text-2xl font-bold">{profile.user}</h2>
+                <p className="text-xl">
+                  Rank: <strong>{index + 1}</strong>
+                </p>
+              </div>
+            </div>
+            {/* Displaying rank here */}
             <p>
-              Average Time Between Actions:{" "}
-              {userProfiles[user].averageTimeBetweenActions} ms
+              Total Actions: <strong>{profile.totalActions}</strong>
             </p>
-            <p>Pallet Picks: {userProfiles[user].palletPicks}</p>
+            <p>
+              Avg Time Between Actions:{" "}
+              <strong>{profile.averageTimeBetweenActions}</strong>
+            </p>
+            <p>
+              Pallet Picks: <strong>{profile.palletPicks}</strong>
+            </p>
             <p>
               Undirected Full Inventory Moves:{" "}
-              {userProfiles[user].undirectedFullInventoryMoves}
+              <strong>{profile.undirectedFullInventoryMoves}</strong>
             </p>
-            <p>Fluid Loads: {userProfiles[user].fluidLoads}</p>
-            <p>List Picks: {userProfiles[user].listPicks}</p>
-            <p>Trailer Loads: {userProfiles[user].trailerLoads}</p>
-            <p>ASN Receives: {userProfiles[user].asnReceives}</p>
+            <p>
+              Fluid Loads: <strong>{profile.fluidLoads}</strong>
+            </p>
+            <p>
+              List Picks: <strong>{profile.listPicks}</strong>
+            </p>
+            <p>
+              Trailer Loads: <strong>{profile.trailerLoads}</strong>
+            </p>
+            <p>
+              ASN Receives: <strong>{profile.asnReceives}</strong>
+            </p>
           </div>
         ))}
+        In this modification, index + 1 is used to display the rank because the
+        index is zero-based. So, for the first user, the index will be 0, and we
+        add 1 to display it as rank 1.
       </div>
       <div className="flex justify-center mb-2 mt-10">
         <h1 className="text-2xl font-bold text-center">Inventory Stats</h1>
