@@ -7,6 +7,7 @@ import FluidLoadPalletPick from "./charts/FluidLoadPalletPick";
 import TrailerLoad from "./charts/TrailerLoad";
 import ListPick from "./charts/ListPick";
 import ItemsShipped from "./charts/ItemsShipped";
+import NonTrustedASNUndirectedReceive from "./charts/NonTrustedASNUndirectedReceive";
 import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
 
 const DataDisplay = ({ data, userObject }) => {
@@ -64,7 +65,7 @@ const DataDisplay = ({ data, userObject }) => {
           : data
       );
     }
-  }, [selectedDay, selectedWeek, data, weeks]);
+  }, [selectedDay, selectedWeek, data]);
 
   const openModalWithChart = (chart) => {
     setCurrentChart(chart);
@@ -74,7 +75,7 @@ const DataDisplay = ({ data, userObject }) => {
 
   return (
     <>
-      <div className="flex justify-around space-x-4 mb-4">
+      <div className="flex justify-around space-x-4 mb-4 mt-5">
         <div></div>
         <div></div>
         <div className="flex flex-row  space-x-4 mb-4">
@@ -83,8 +84,10 @@ const DataDisplay = ({ data, userObject }) => {
               onChange={(e) => {
                 if (e.target.value === "all") {
                   setSelectedWeek(null);
+                  setSelectedDay(null);
                 } else {
                   setSelectedWeek(Number(e.target.value));
+                  setSelectedDay(null);
                 }
               }}
               defaultValue="placeholder" // Set the default value to the placeholder value
@@ -103,10 +106,10 @@ const DataDisplay = ({ data, userObject }) => {
           </div>
           <div>
             <select
+              value={selectedDay || "placeholder"} // Bind the value to selectedDay
               onChange={(e) =>
                 setSelectedDay(e.target.value === "all" ? null : e.target.value)
               }
-              defaultValue="placeholder"
             >
               <option value="placeholder" disabled hidden>
                 Select Day
@@ -130,6 +133,10 @@ const DataDisplay = ({ data, userObject }) => {
           </div>
         </div>
       </div>
+      <div className="flex justify-center mb-2">
+        <h1 className="text-2xl font-bold text-center">Overall User Stats</h1>
+      </div>
+
       <div
         className="flex flex-wrap justify-center w-full gap-8 relative z-50"
         style={{ zIndex: 50, position: "relative" }}
@@ -184,6 +191,7 @@ const DataDisplay = ({ data, userObject }) => {
         >
           <FluidLoadPalletPick data={filteredData} userObject={userObject} />
         </div>
+
         <div
           className="w-1/4 chart-card relative z-50"
           onClick={() =>
@@ -198,6 +206,30 @@ const DataDisplay = ({ data, userObject }) => {
           className="w-1/4 chart-card relative z-50"
           onClick={() =>
             openModalWithChart(
+              <NonTrustedASNUndirectedReceive
+                data={filteredData}
+                userObject={userObject}
+              />
+            )
+          }
+        >
+          <NonTrustedASNUndirectedReceive
+            data={filteredData}
+            userObject={userObject}
+          />
+        </div>
+      </div>
+      <div className="flex justify-center mb-2 mt-10">
+        <h1 className="text-2xl font-bold text-center">Inventory Stats</h1>
+      </div>
+      <div
+        className="flex flex-wrap justify-center w-full gap-8 relative z-50"
+        style={{ zIndex: 50, position: "relative" }}
+      >
+        <div
+          className="w-1/4 chart-card relative z-50"
+          onClick={() =>
+            openModalWithChart(
               <ItemsShipped
                 data={filteredData}
                 userObject={userObject}
@@ -208,10 +240,35 @@ const DataDisplay = ({ data, userObject }) => {
         >
           <ItemsShipped data={filteredData} userObject={userObject} />
         </div>
-        {isModalOpen && (
-          <Modal onClose={() => setIsModalOpen(false)}>{currentChart}</Modal>
-        )}
       </div>
+      <div className="flex justify-center mb-2 mt-10">
+        <h1 className="text-2xl font-bold text-center">
+          PLACEHOLDER FOR 3rd GROUP
+        </h1>
+      </div>
+      <div
+        className="flex flex-wrap justify-center w-full gap-8 relative z-50"
+        style={{ zIndex: 50, position: "relative" }}
+      >
+        <div
+          className="w-1/4 chart-card relative z-50"
+          onClick={() =>
+            openModalWithChart(
+              <ItemsShipped
+                data={filteredData}
+                userObject={userObject}
+                isInModal={true}
+              />
+            )
+          }
+        >
+          <ItemsShipped data={filteredData} userObject={userObject} />
+        </div>
+      </div>
+
+      {isModalOpen && (
+        <Modal onClose={() => setIsModalOpen(false)}>{currentChart}</Modal>
+      )}
     </>
   );
 };
