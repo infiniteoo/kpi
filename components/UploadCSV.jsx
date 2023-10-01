@@ -23,11 +23,18 @@ const UploadCSV = ({ setData }) => {
 
     // Send the file to the server
     axios
-      .post("http://localhost:5000/api/uploaded-file", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Specify the content type as form data
-        },
-      })
+      .post(
+        process.env.NEXT_PUBLIC_ENV === "development"
+          ? `http://localhost:5000/api/uploaded-file`
+          : `https://tecvex.com/api/uploaded-file`,
+
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Specify the content type as form data
+          },
+        }
+      )
       .then((response) => {
         setCsvData(response.data);
         setErrorMessage("");

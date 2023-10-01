@@ -7,8 +7,6 @@ import DataDisplay from '../components/Data.jsx'
 
 import ParticleDisplay from '../components/ParticleDisplay'
 
-// Define the keyframes for the sliding animation
-
 export default function Home() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -19,7 +17,12 @@ export default function Home() {
     const fetchData = async () => {
       try {
         setLoading(true)
-        let result = await axios.get('http://localhost:5000/api/excel')
+
+        let result = await axios.get(
+          process.env.NEXT_PUBLIC_ENV === 'development'
+            ? `http://localhost:5000/api/excel`
+            : `https://tecvex.com/api/excel`,
+        )
         setLoading(false)
         setDataFinallyLoaded(true)
         const filteredData = result.data.filter(

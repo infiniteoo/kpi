@@ -20,7 +20,6 @@ import {
 
 import { Bar } from "react-chartjs-2";
 
-import axios from "axios";
 import { PieController, ArcElement } from "chart.js";
 
 ChartJS.register(

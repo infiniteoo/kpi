@@ -20,7 +20,6 @@ import {
 
 import { Doughnut } from "react-chartjs-2"; // Import Doughnut
 
-import axios from "axios";
 import { PieController, ArcElement } from "chart.js";
 
 ChartJS.register(
