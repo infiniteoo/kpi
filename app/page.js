@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { separateByUser } from '../utils/dataManipulation'
 import Header from '../components/Header'
-import DataDisplay from '../components/DataDisplayTemp.jsx'
+import DataDisplay from '../components/Data.jsx'
 
 import ParticleDisplay from '../components/ParticleDisplay'
 

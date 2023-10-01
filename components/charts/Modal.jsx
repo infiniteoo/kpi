@@ -24,15 +24,20 @@ const Modal = ({ children, onClose }) => {
 
   const closeButtonStyle = {
     position: "absolute",
-    right: "10px",
+    right: "3px",
     top: "10px",
     cursor: "pointer",
+    paddingLeft: "10px", // Added paddingLeft to add space to the left of the close button
   };
 
   return (
     <div style={overlayStyle}>
       <div style={modalStyle}>
-        <span style={closeButtonStyle} onClick={onClose}>
+        <span
+          style={closeButtonStyle}
+          onClick={onClose}
+          className="font-bold text-xl"
+        >
           X
         </span>
         {children}
