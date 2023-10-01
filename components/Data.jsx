@@ -1,72 +1,94 @@
 import React, { useState, useEffect } from "react";
 import Loading from "./Loading";
 import Modal from "./charts/Modal";
-import { format } from "date-fns";
 import UndirectedFullInventoryMove from "./charts/UndirectedFullInventoryMove";
 import PalletPick from "./charts/PalletPick";
 import FluidLoadPalletPick from "./charts/FluidLoadPalletPick";
 import TrailerLoad from "./charts/TrailerLoad";
 import ListPick from "./charts/ListPick";
 import ItemsShipped from "./charts/ItemsShipped";
+import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
 
 const DataDisplay = ({ data, userObject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentChart, setCurrentChart] = useState(null);
   const [dateRange, setDateRange] = useState("");
+  const [selectedWeek, setSelectedWeek] = useState(null);
+  const [weeks, setWeeks] = useState([]);
+  const [filteredData, setFilteredData] = useState(data || []);
 
   useEffect(() => {
     if (!data || data.length === 0) return;
 
-    let earliestDate = new Date();
-    let latestDate = new Date("1970-01-01");
+    // Sort the data by date
+    const sortedData = [...data].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
 
-    data.forEach((item) => {
-      const currentDate = new Date(item.date);
-      if (currentDate < earliestDate) earliestDate = currentDate;
-      if (currentDate > latestDate) latestDate = currentDate;
-    });
+    // Find the start date of the first week and the end date of the last week
+    let startDate = startOfWeek(new Date(sortedData[0].date));
+    const endDate = endOfWeek(new Date(sortedData[sortedData.length - 1].date));
 
-    // Formatting the dates
-    const formattedEarliestDate = format(earliestDate, "MMMM do yyyy, h:mm a");
-    const formattedLatestDate = format(latestDate, "MMMM do yyyy, h:mm a");
+    const calculatedWeeks = [];
 
-    setDateRange(`${formattedEarliestDate} - ${formattedLatestDate}`);
+    // Iterate over each week between the start and end dates
+    while (startDate <= endDate) {
+      const weekEndDate = endOfWeek(new Date(startDate));
+      calculatedWeeks.push({
+        start: new Date(startDate),
+        end: new Date(weekEndDate),
+      });
+      startDate = addWeeks(new Date(startDate), 1); // Move to the next week
+    }
 
-    const userCounts = data.reduce((acc, cur) => {
-      const user = cur.user;
-      if (user !== "NOUSER") {
-        acc[user] = (acc[user] || 0) + 1;
-      }
-      return acc;
-    }, {});
-
-    const sortedUsers = Object.entries(userCounts)
-      .sort((a, b) => b[1] - a[1])
-      .reduce(
-        (acc, [user, count]) => {
-          acc.labels.push(user);
-          acc.data.push(count);
-          return acc;
-        },
-        { labels: [], data: [] }
-      );
+    setWeeks(calculatedWeeks);
   }, [data]);
 
-  const charts = [
-    <UndirectedFullInventoryMove data={data} userObject={userObject} />,
-    <PalletPick data={data} userObject={userObject} />,
-    <FluidLoadPalletPick data={data} userObject={userObject} />,
-  ];
+  useEffect(() => {
+    if (selectedWeek !== null) {
+      const week = weeks[selectedWeek];
+      setFilteredData(
+        data.filter(
+          (item) =>
+            new Date(item.date) >= week.start && new Date(item.date) <= week.end
+        )
+      );
+    } else {
+      setFilteredData(data); // If no week is selected, show all data
+    }
+  }, [selectedWeek, data, weeks]);
 
   const openModalWithChart = (chart) => {
     setCurrentChart(chart);
     setIsModalOpen(true);
   };
-  if (!data) return <Loading />;
+  if (!filteredData || filteredData.length === 0) return <Loading />;
 
   return (
     <>
-      <div style={{ zIndex: 50, position: "relative" }}> {dateRange}</div>
+      <div>
+        <select
+          onChange={(e) => {
+            if (e.target.value === "all") {
+              setSelectedWeek(null);
+            } else {
+              setSelectedWeek(Number(e.target.value));
+            }
+          }}
+          defaultValue="placeholder" // Set the default value to the placeholder value
+        >
+          <option value="placeholder" disabled hidden>
+            Select Week
+          </option>
+          <option value="all">Show All</option>
+          {weeks.map((week, index) => (
+            <option key={index} value={index}>
+              {format(week.start, "MMMM do yyyy")} -{" "}
+              {format(week.end, "MMMM do yyyy")}
+            </option>
+          ))}
+        </select>
+      </div>
       <div
         className="flex flex-wrap justify-center w-full gap-8 relative z-50"
         style={{ zIndex: 50, position: "relative" }}
@@ -77,65 +99,73 @@ const DataDisplay = ({ data, userObject }) => {
           onClick={() =>
             openModalWithChart(
               <UndirectedFullInventoryMove
-                data={data}
+                data={filteredData}
                 userObject={userObject}
               />
             )
           }
         >
-          <UndirectedFullInventoryMove data={data} userObject={userObject} />
+          <UndirectedFullInventoryMove
+            data={filteredData}
+            userObject={userObject}
+          />
         </div>
         <div
           className="w-1/4 chart-card relative z-50"
           onClick={() =>
             openModalWithChart(
-              <PalletPick data={data} userObject={userObject} />
+              <PalletPick data={filteredData} userObject={userObject} />
             )
           }
         >
-          <PalletPick data={data} userObject={userObject} />
-        </div>
-        <div
-          className="w-1/4 chart-card relative z-50"
-          onClick={() =>
-            openModalWithChart(<ListPick data={data} userObject={userObject} />)
-          }
-        >
-          <ListPick data={data} userObject={userObject} />
+          <PalletPick data={filteredData} userObject={userObject} />
         </div>
         <div
           className="w-1/4 chart-card relative z-50"
           onClick={() =>
             openModalWithChart(
-              <FluidLoadPalletPick data={data} userObject={userObject} />
+              <ListPick data={filteredData} userObject={userObject} />
             )
           }
         >
-          <FluidLoadPalletPick data={data} userObject={userObject} />
+          <ListPick data={filteredData} userObject={userObject} />
         </div>
         <div
           className="w-1/4 chart-card relative z-50"
           onClick={() =>
             openModalWithChart(
-              <TrailerLoad data={data} userObject={userObject} />
+              <FluidLoadPalletPick
+                data={filteredData}
+                userObject={userObject}
+              />
             )
           }
         >
-          <TrailerLoad data={data} userObject={userObject} />
+          <FluidLoadPalletPick data={filteredData} userObject={userObject} />
+        </div>
+        <div
+          className="w-1/4 chart-card relative z-50"
+          onClick={() =>
+            openModalWithChart(
+              <TrailerLoad data={filteredData} userObject={userObject} />
+            )
+          }
+        >
+          <TrailerLoad data={filteredData} userObject={userObject} />
         </div>
         <div
           className="w-1/4 chart-card relative z-50"
           onClick={() =>
             openModalWithChart(
               <ItemsShipped
-                data={data}
+                data={filteredData}
                 userObject={userObject}
                 isInModal={true}
               />
             )
           }
         >
-          <ItemsShipped data={data} userObject={userObject} />
+          <ItemsShipped data={filteredData} userObject={userObject} />
         </div>
         {isModalOpen && (
           <Modal onClose={() => setIsModalOpen(false)}>{currentChart}</Modal>
