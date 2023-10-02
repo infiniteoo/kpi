@@ -10,6 +10,7 @@ export const useData = (data, userObject) => {
   const [selectedDay, setSelectedDay] = useState(null)
   const [userProfiles, setUserProfiles] = useState([])
   const [dateRange, setDateRange] = useState('')
+  const [filteredUserObject, setFilteredUserObject] = useState(userObject)
 
   function convertToSeconds(timeStr) {
     const parts = timeStr.split(' ')
@@ -25,7 +26,7 @@ export const useData = (data, userObject) => {
   }
 
   useEffect(() => {
-    const profiles = calculateUserProfiles(userObject)
+    const profiles = calculateUserProfiles(userObject, filteredData)
 
     // Calculate scores for each user
     const scoredProfiles = Object.entries(profiles).map(([user, profile]) => {
@@ -53,7 +54,7 @@ export const useData = (data, userObject) => {
 
     const rankedProfiles = scoredProfiles.sort((a, b) => b.score - a.score)
     setUserProfiles(rankedProfiles)
-  }, [userObject])
+  }, [userObject, filteredData])
 
   useEffect(() => {
     if (!data || data.length === 0) return
@@ -80,6 +81,9 @@ export const useData = (data, userObject) => {
   }, [data])
 
   useEffect(() => {
+    if (!filteredUserObject || !filteredData) return
+    const profiles = calculateUserProfiles(filteredUserObject, filteredData)
+
     if (filteredData && filteredData.length > 0) {
       const minDate = new Date(
         Math.min(...filteredData.map((e) => new Date(e.date))),
@@ -94,26 +98,61 @@ export const useData = (data, userObject) => {
         )}`,
       )
     }
-  }, [filteredData])
+    // Calculate scores for each user
+    const scoredProfiles = Object.entries(profiles).map(([user, profile]) => {
+      let score = 0
+      score += profile.totalActions * WEIGHTS.totalActions
+
+      // If averageTimeBetweenActions is lower, the score is higher
+      if (profile.averageTimeBetweenActions > 0) {
+        score +=
+          (1 / convertToSeconds(profile.averageTimeBetweenActions)) *
+          WEIGHTS.avgTimeBetweenActions
+      }
+
+      score += profile.palletPicks * WEIGHTS.palletPicks
+      score +=
+        profile.undirectedFullInventoryMoves *
+        WEIGHTS.undirectedFullInventoryMoves
+      score += profile.fluidLoads * WEIGHTS.fluidLoads
+      score += profile.listPicks * WEIGHTS.listPicks
+      score += profile.trailerLoads * WEIGHTS.trailerLoads
+      score += profile.asnReceives * WEIGHTS.asnReceives
+
+      return { user, score, ...profile }
+    })
+    const rankedProfiles = scoredProfiles.sort((a, b) => b.score - a.score)
+    setUserProfiles(rankedProfiles)
+  }, [filteredData, filteredUserObject])
 
   useEffect(() => {
+    let newFilteredData
     if (selectedDay !== null) {
-      setFilteredData(
-        filteredData.filter(
-          (item) => format(new Date(item.date), 'MMMM do yyyy') === selectedDay,
-        ),
+      newFilteredData = data.filter(
+        (item) => format(new Date(item.date), 'MMMM do yyyy') === selectedDay,
       )
     } else {
-      // Reset to the data of the selected week or all data if no week is selected
-      setFilteredData(
+      newFilteredData =
         selectedWeek !== null
           ? data.filter(
               (item) =>
                 new Date(item.date) >= weeks[selectedWeek].start &&
                 new Date(item.date) <= weeks[selectedWeek].end,
             )
-          : data,
-      )
+          : data
+    }
+    setFilteredData(newFilteredData)
+
+    // Check if newFilteredData is truthy before running forEach on it
+    if (newFilteredData) {
+      // Filter userObject based on the newFilteredData
+      const newFilteredUserObject = {}
+      newFilteredData.forEach((item) => {
+        if (!newFilteredUserObject[item.user])
+          newFilteredUserObject[item.user] = []
+        newFilteredUserObject[item.user].push(item)
+      })
+      setFilteredUserObject(newFilteredUserObject)
     }
   }, [selectedDay, selectedWeek, data, weeks])
 
