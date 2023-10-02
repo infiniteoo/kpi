@@ -34,4 +34,5 @@ export const IGNORED_USERS = [
   'NOUSER',
   'D',
   'REPLENMGR',
+  'UNKNOWN',
 ]
