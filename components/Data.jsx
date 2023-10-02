@@ -9,6 +9,8 @@ import ListPick from "./charts/ListPick";
 import ItemsShipped from "./charts/ItemsShipped";
 import NonTrustedASNUndirectedReceive from "./charts/NonTrustedASNUndirectedReceive";
 import InventoryAttributeChange from "./charts/InventoryAttributeChange";
+import DateRange from "./charts/DateRange";
+
 const Modal = React.lazy(() => import("./charts/Modal"));
 
 import { format } from "date-fns";
@@ -19,7 +21,6 @@ import { useData } from "./useData";
 const DataDisplay = ({ data, userObject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentChart, setCurrentChart] = useState(null);
-  const [dateRange, setDateRange] = useState("");
 
   const {
     weeks,
@@ -29,6 +30,7 @@ const DataDisplay = ({ data, userObject }) => {
     selectedDay,
     setSelectedDay,
     userProfiles,
+    dateRange,
   } = useData(data, userObject);
 
   const openModalWithChart = useCallback((chart) => {
@@ -41,7 +43,8 @@ const DataDisplay = ({ data, userObject }) => {
   return (
     <>
       <div className="flex justify-around space-x-4 mb-4 mt-5">
-        <div></div>
+        <DateRange dateRange={dateRange} />
+
         <div></div>
         <div className="flex flex-row  space-x-4 mb-4">
           <Dropdown

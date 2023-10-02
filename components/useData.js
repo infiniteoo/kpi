@@ -9,6 +9,7 @@ export const useData = (data, userObject) => {
   const [selectedWeek, setSelectedWeek] = useState(null)
   const [selectedDay, setSelectedDay] = useState(null)
   const [userProfiles, setUserProfiles] = useState([])
+  const [dateRange, setDateRange] = useState('')
 
   function convertToSeconds(timeStr) {
     const parts = timeStr.split(' ')
@@ -79,6 +80,23 @@ export const useData = (data, userObject) => {
   }, [data])
 
   useEffect(() => {
+    if (filteredData && filteredData.length > 0) {
+      const minDate = new Date(
+        Math.min(...filteredData.map((e) => new Date(e.date))),
+      )
+      const maxDate = new Date(
+        Math.max(...filteredData.map((e) => new Date(e.date))),
+      )
+      setDateRange(
+        `${format(minDate, 'MMMM do yyyy')} - ${format(
+          maxDate,
+          'MMMM do yyyy',
+        )}`,
+      )
+    }
+  }, [filteredData])
+
+  useEffect(() => {
     if (selectedDay !== null) {
       setFilteredData(
         filteredData.filter(
@@ -107,5 +125,6 @@ export const useData = (data, userObject) => {
     selectedDay,
     setSelectedDay,
     userProfiles,
+    dateRange,
   }
 }
