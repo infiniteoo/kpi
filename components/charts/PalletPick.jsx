@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from "react";
 import { format } from "date-fns";
-import { colors } from "../../utils/constants";
+import { COLORS } from "../../utils/constants";
 
 import {
   Chart as ChartJS,
@@ -71,8 +71,8 @@ const PalletPick = ({ data, userObject }) => {
         {
           label: "Pallet Pick",
           data: sortedUsers.data,
-          backgroundColor: colors,
-          borderColor: colors.map((color) => color.replace("0.6", "1")),
+          backgroundColor: COLORS,
+          borderColor: COLORS.map((color) => color.replace("0.6", "1")),
           borderWidth: 1,
         },
       ],

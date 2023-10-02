@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from "react";
-import { colors } from "../../utils/constants";
+import { COLORS } from "../../utils/constants";
 import { format } from "date-fns";
 
 import {
@@ -89,10 +89,10 @@ const UndirectedFullInventoryMove = ({ data, userObject }) => {
         {
           label: "Undirected Full Inventory Move",
           data: sortedUsers.data,
-          backgroundColor: colors.slice(0, sortedUsers.data.length), // Use the array of colors here
-          borderColor: colors
-            .slice(0, sortedUsers.data.length)
-            .map((color) => color.replace("0.6", "1")), // Replace the alpha value with 1 for border
+          backgroundColor: COLORS.slice(0, sortedUsers.data.length), // Use the array of COLORS here
+          borderColor: COLORS.slice(0, sortedUsers.data.length).map((color) =>
+            color.replace("0.6", "1")
+          ), // Replace the alpha value with 1 for border
           borderWidth: 1,
         },
       ],

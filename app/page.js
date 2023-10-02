@@ -6,6 +6,7 @@ import Header from '../components/Header'
 import DataDisplay from '../components/Data.jsx'
 
 import ParticleDisplay from '../components/ParticleDisplay'
+import { IGNORED_USERS } from '../utils/constants'
 
 export default function Home() {
   const [data, setData] = useState(null)
@@ -25,30 +26,14 @@ export default function Home() {
         )
 
         const filteredData = result.data.filter(
-          (item) =>
-            ![
-              'ACONKLE',
-              'EPARK',
-              'CTYNDALL',
-              'BNELSEN',
-              'KSILVERS',
-              'GBRENNAN',
-            ].includes(item.user),
+          (item) => !IGNORED_USERS.includes(item.user),
         )
         setData(filteredData)
         let compiledUserObject = separateByUser(filteredData)
 
         const filteredUserObject = Object.fromEntries(
           Object.entries(compiledUserObject).filter(
-            ([key]) =>
-              ![
-                'ACONKLE',
-                'EPARK',
-                'CTYNDALL',
-                'BNELSEN',
-                'KSILVERS',
-                'GBRENNAN',
-              ].includes(key),
+            ([key]) => !IGNORED_USERS.includes(key),
           ),
         )
 

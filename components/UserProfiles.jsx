@@ -42,6 +42,10 @@ const UserProfiles = ({ profile, rank }) => {
       <p>
         ASN Receives: <strong>{profile.asnReceives}</strong>
       </p>
+      <p>
+        Inventory Attribute Changes:{" "}
+        <strong>{profile.inventoryAttributeChange}</strong>
+      </p>
     </div>
   );
 };

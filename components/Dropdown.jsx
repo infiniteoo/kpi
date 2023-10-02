@@ -1,8 +1,6 @@
 import { memo } from "react";
 
 const Dropdown = ({ options, onChange, placeholder }) => {
-  console.log(options, onChange, placeholder);
-
   return (
     <select
       style={{ display: "block", zIndex: 50 }}

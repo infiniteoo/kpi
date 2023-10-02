@@ -8,6 +8,7 @@ import TrailerLoad from "./charts/TrailerLoad";
 import ListPick from "./charts/ListPick";
 import ItemsShipped from "./charts/ItemsShipped";
 import NonTrustedASNUndirectedReceive from "./charts/NonTrustedASNUndirectedReceive";
+import InventoryAttributeChange from "./charts/InventoryAttributeChange";
 const Modal = React.lazy(() => import("./charts/Modal"));
 
 import { format } from "date-fns";
@@ -200,6 +201,23 @@ const DataDisplay = ({ data, userObject }) => {
           }
         >
           <ItemsShipped data={filteredData} userObject={userObject} />
+        </div>
+        <div
+          className="w-1/4 chart-card relative z-50"
+          onClick={() =>
+            openModalWithChart(
+              <InventoryAttributeChange
+                data={filteredData}
+                userObject={userObject}
+                isInModal={true}
+              />
+            )
+          }
+        >
+          <InventoryAttributeChange
+            data={filteredData}
+            userObject={userObject}
+          />
         </div>
       </div>
 

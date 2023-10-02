@@ -1,4 +1,4 @@
-export const weights = {
+export const WEIGHTS = {
   totalActions: 1,
   avgTimeBetweenActions: 1,
   palletPicks: 1,
@@ -9,7 +9,7 @@ export const weights = {
   asnReceives: 1,
 }
 
-const colors = [
+export const COLORS = [
   'rgba(255, 99, 132, 0.6)', // red
   'rgba(54, 162, 235, 0.6)', // blue
   'rgba(255, 206, 86, 0.6)', // yellow
@@ -22,4 +22,13 @@ const colors = [
   'rgba(144, 238, 144, 0.6)', // light green
   'rgba(255, 105, 180, 0.6)', // hot pink
   'rgba(218, 165, 32, 0.6)', // golden rod
+]
+
+export const IGNORED_USERS = [
+  'ACONKLE',
+  'EPARK',
+  'CTYNDALL',
+  'BNELSEN',
+  'KSILVERS',
+  'GBRENNAN',
 ]

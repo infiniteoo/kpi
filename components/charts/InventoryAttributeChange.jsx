@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from "react";
-import { format } from "date-fns";
 import { COLORS } from "../../utils/constants";
+import { format } from "date-fns";
 
 import {
   Chart as ChartJS,
@@ -39,12 +39,14 @@ ChartJS.register(
   RadialLinearScale
 );
 
-const ListPick = ({ data, userObject }) => {
+const InventoryAttributeChange = ({ data, userObject }) => {
   const [chartData, setChartData] = useState(null);
   const [dateRange, setDateRange] = useState("");
 
   useEffect(() => {
-    const filteredData = data.filter((item) => item.activity === "List Pick");
+    const filteredData = data.filter(
+      (item) => item.activity === "Inventory Attribute Change"
+    );
 
     const userCounts = filteredData.reduce((acc, cur) => {
       const user = cur.user;
@@ -85,7 +87,7 @@ const ListPick = ({ data, userObject }) => {
       labels: sortedUsers.labels,
       datasets: [
         {
-          label: "List Pick",
+          label: "Inventory Attribute Change",
           data: sortedUsers.data,
           backgroundColor: COLORS.slice(0, sortedUsers.data.length), // Use the array of COLORS here
           borderColor: COLORS.slice(0, sortedUsers.data.length).map((color) =>
@@ -110,7 +112,7 @@ const ListPick = ({ data, userObject }) => {
               backgroundColor: "white",
             }}
           >
-            List Pick
+            Inventory Attribute Change
           </div>
           <Bar
             data={chartData}
@@ -121,7 +123,7 @@ const ListPick = ({ data, userObject }) => {
                   beginAtZero: true,
                   ticks: {
                     font: {
-                      size: 14,
+                      size: 14, // adjust this value for x-axis labels
                     },
                   },
                 },
@@ -147,4 +149,4 @@ const ListPick = ({ data, userObject }) => {
   );
 };
 
-export default memo(ListPick);
+export default memo(InventoryAttributeChange);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from "react";
-import { colors } from "../../utils/constants";
+import { COLORS } from "../../utils/constants";
 
 import {
   Chart as ChartJS,
@@ -74,10 +74,10 @@ const itemsShipped = ({ data, userObject, isInModal }) => {
       datasets: [
         {
           data: sortedItems.data,
-          backgroundColor: colors.slice(0, sortedItems.data.length),
-          borderColor: colors
-            .slice(0, sortedItems.data.length)
-            .map((color) => color.replace("0.6", "1")),
+          backgroundColor: COLORS.slice(0, sortedItems.data.length),
+          borderColor: COLORS.slice(0, sortedItems.data.length).map((color) =>
+            color.replace("0.6", "1")
+          ),
           borderWidth: 1,
         },
       ],

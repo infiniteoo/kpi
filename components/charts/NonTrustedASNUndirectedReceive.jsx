@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from "react";
 import { format } from "date-fns";
-import { colors } from "../../utils/constants";
+import { COLORS } from "../../utils/constants";
 import {
   Chart as ChartJS,
   Title,
@@ -108,13 +108,13 @@ const NonTrustedASNUndirectedReceive = ({ data, userObject }) => {
         {
           label: "ASN Receive Count",
           data: sortedUsers.data,
-          backgroundColor: colors, // Use the array of colors here
-          borderColor: colors.map((color) => color.replace("0.6", "1")),
+          backgroundColor: COLORS, // Use the array of COLORS here
+          borderColor: COLORS.map((color) => color.replace("0.6", "1")),
           borderWidth: 1,
-          hoverBackgroundColor: colors.map((color) =>
+          hoverBackgroundColor: COLORS.map((color) =>
             color.replace("0.6", "0.8")
           ),
-          hoverBorderColor: colors.map((color) => color.replace("0.6", "1")),
+          hoverBorderColor: COLORS.map((color) => color.replace("0.6", "1")),
           hoverBorderWidth: 2, // Increase border width on hover
         },
       ],

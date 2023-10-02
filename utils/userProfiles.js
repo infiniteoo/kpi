@@ -24,6 +24,7 @@ export const calculateUserProfiles = (userObject) => {
       let listPicks = 0
       let trailerLoads = 0
       let asnReceives = 0
+      let inventoryAttributeChange = 0
 
       actions.forEach((action) => {
         totalActions++
@@ -52,11 +53,14 @@ export const calculateUserProfiles = (userObject) => {
           case 'List Pick':
             listPicks++
             break
-          case 'Trailer Load':
+          case 'Trailer load':
             trailerLoads++
             break
           case 'Non-Trusted ASN':
             asnReceives++
+            break
+          case 'Inventory Attribute Change':
+            inventoryAttributeChange++
             break
           default:
             break
@@ -99,6 +103,7 @@ export const calculateUserProfiles = (userObject) => {
         listPicks,
         trailerLoads,
         asnReceives,
+        inventoryAttributeChange,
       }
     }
   }

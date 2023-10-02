@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { startOfWeek, endOfWeek, addWeeks, format } from 'date-fns'
 import { calculateUserProfiles } from '../utils/userProfiles'
-import { weights } from '../utils/constants'
+import { WEIGHTS } from '../utils/constants'
 
 export const useData = (data, userObject) => {
   const [weeks, setWeeks] = useState([])
@@ -29,18 +29,23 @@ export const useData = (data, userObject) => {
     // Calculate scores for each user
     const scoredProfiles = Object.entries(profiles).map(([user, profile]) => {
       let score = 0
-      score += profile.totalActions * weights.totalActions
-      score +=
-        convertToSeconds(profile.averageTimeBetweenActions) *
-        weights.avgTimeBetweenActions
-      score += profile.palletPicks * weights.palletPicks
+      score += profile.totalActions * WEIGHTS.totalActions
+
+      // If averageTimeBetweenActions is lower, the score is higher
+      if (profile.averageTimeBetweenActions > 0) {
+        score +=
+          (1 / convertToSeconds(profile.averageTimeBetweenActions)) *
+          WEIGHTS.avgTimeBetweenActions
+      }
+
+      score += profile.palletPicks * WEIGHTS.palletPicks
       score +=
         profile.undirectedFullInventoryMoves *
-        weights.undirectedFullInventoryMoves
-      score += profile.fluidLoads * weights.fluidLoads
-      score += profile.listPicks * weights.listPicks
-      score += profile.trailerLoads * weights.trailerLoads
-      score += profile.asnReceives * weights.asnReceives
+        WEIGHTS.undirectedFullInventoryMoves
+      score += profile.fluidLoads * WEIGHTS.fluidLoads
+      score += profile.listPicks * WEIGHTS.listPicks
+      score += profile.trailerLoads * WEIGHTS.trailerLoads
+      score += profile.asnReceives * WEIGHTS.asnReceives
 
       return { user, score, ...profile }
     })
