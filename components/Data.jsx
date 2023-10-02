@@ -11,6 +11,7 @@ import NonTrustedASNUndirectedReceive from "./charts/NonTrustedASNUndirectedRece
 import { calculateUserProfiles } from "../utils/userProfiles";
 import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
 import Dropdown from "./Dropdown";
+import UserProfiles from "./UserProfiles";
 
 const DataDisplay = ({ data, userObject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -124,9 +125,7 @@ const DataDisplay = ({ data, userObject }) => {
     });
     return seconds;
   }
-  /*  console.log("weeks: ", weeks);
-  console.log("filteredData: ", filteredData);
- */
+
   if (!filteredData || filteredData.length === 0) return <Loading />;
 
   return (
@@ -308,51 +307,7 @@ const DataDisplay = ({ data, userObject }) => {
         style={{ zIndex: 50, position: "relative" }}
       >
         {userProfiles.map((profile, index) => (
-          <div
-            key={profile.user}
-            className="w-1/4 p-4 bg-white shadow-md rounded-md flex flex-col items-center"
-          >
-            <div className="flex items-center mb-4">
-              <img
-                src="/profile_placeholder.jpg"
-                alt="Profile Placeholder"
-                className="w-16 h-16 rounded-full"
-              />
-              <div className="ml-4 text-center">
-                <h2 className="text-2xl font-bold">{profile.user}</h2>
-                <p className="text-xl">
-                  Rank: <strong>{index + 1}</strong>
-                </p>
-              </div>
-            </div>
-            {/* Displaying rank here */}
-            <p>
-              Total Actions: <strong>{profile.totalActions}</strong>
-            </p>
-            <p>
-              Avg Time Between Actions:{" "}
-              <strong>{profile.averageTimeBetweenActions}</strong>
-            </p>
-            <p>
-              Pallet Picks: <strong>{profile.palletPicks}</strong>
-            </p>
-            <p>
-              Undirected Full Inventory Moves:{" "}
-              <strong>{profile.undirectedFullInventoryMoves}</strong>
-            </p>
-            <p>
-              Fluid Loads: <strong>{profile.fluidLoads}</strong>
-            </p>
-            <p>
-              List Picks: <strong>{profile.listPicks}</strong>
-            </p>
-            <p>
-              Trailer Loads: <strong>{profile.trailerLoads}</strong>
-            </p>
-            <p>
-              ASN Receives: <strong>{profile.asnReceives}</strong>
-            </p>
-          </div>
+          <UserProfiles key={profile.user} profile={profile} rank={index + 1} />
         ))}
       </div>
 
