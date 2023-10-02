@@ -182,12 +182,12 @@ app.get('/api/excel', async (req, res) => {
   const filePath = path.join(__dirname, '/Inventory.csv')
   console.log('filepath created: ', filePath)
   const workbook = XLSX.readFile(filePath)
-  console.log('workbook created: ', workbook)
+  console.log('workbook created: ')
 
   const sheetName = workbook.SheetNames[0]
-  console.log('sheetname created: ', sheetName)
+  console.log('sheetname created: ')
   const worksheet = workbook.Sheets[sheetName]
-  console.log('worksheet created', worksheet)
+  console.log('worksheet created')
   const excelData = XLSX.utils.sheet_to_json(worksheet, {
     header: 1,
     raw: true,
