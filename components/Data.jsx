@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Loading from "./Loading";
 import Modal from "./charts/Modal";
 import UndirectedFullInventoryMove from "./charts/UndirectedFullInventoryMove";
@@ -8,123 +8,31 @@ import TrailerLoad from "./charts/TrailerLoad";
 import ListPick from "./charts/ListPick";
 import ItemsShipped from "./charts/ItemsShipped";
 import NonTrustedASNUndirectedReceive from "./charts/NonTrustedASNUndirectedReceive";
-import { calculateUserProfiles } from "../utils/userProfiles";
-import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
+
+import { format } from "date-fns";
 import Dropdown from "./Dropdown";
 import UserProfiles from "./UserProfiles";
+import { useData } from "./useData";
 
 const DataDisplay = ({ data, userObject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentChart, setCurrentChart] = useState(null);
   const [dateRange, setDateRange] = useState("");
-  const [selectedWeek, setSelectedWeek] = useState(null);
-  const [weeks, setWeeks] = useState([]);
-  const [filteredData, setFilteredData] = useState(data || []);
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [userProfiles, setUserProfiles] = useState({});
 
-  useEffect(() => {
-    const profiles = calculateUserProfiles(userObject);
-
-    const weights = {
-      totalActions: 1,
-      avgTimeBetweenActions: 1,
-      palletPicks: 1,
-      undirectedFullInventoryMoves: 1,
-      fluidLoads: 1,
-      listPicks: 1,
-      trailerLoads: 1,
-      asnReceives: 1,
-    };
-
-    // Calculate scores for each user
-    const scoredProfiles = Object.entries(profiles).map(([user, profile]) => {
-      let score = 0;
-      score += profile.totalActions * weights.totalActions;
-      score +=
-        convertToSeconds(profile.averageTimeBetweenActions) *
-        weights.avgTimeBetweenActions;
-      score += profile.palletPicks * weights.palletPicks;
-      score +=
-        profile.undirectedFullInventoryMoves *
-        weights.undirectedFullInventoryMoves;
-      score += profile.fluidLoads * weights.fluidLoads;
-      score += profile.listPicks * weights.listPicks;
-      score += profile.trailerLoads * weights.trailerLoads;
-      score += profile.asnReceives * weights.asnReceives;
-
-      return { user, score, ...profile };
-    });
-
-    const rankedProfiles = scoredProfiles.sort((a, b) => b.score - a.score);
-    setUserProfiles(rankedProfiles);
-  }, [userObject]);
-
-  useEffect(() => {
-    if (!data || data.length === 0) return;
-
-    // Sort the data by date
-    const sortedData = [...data].sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
-    );
-
-    // Find the start date of the first week and the end date of the last week
-    let startDate = startOfWeek(new Date(sortedData[0].date));
-    const endDate = endOfWeek(new Date(sortedData[sortedData.length - 1].date));
-
-    const calculatedWeeks = [];
-
-    // Iterate over each week between the start and end dates
-    while (startDate <= endDate) {
-      const weekEndDate = endOfWeek(new Date(startDate));
-      calculatedWeeks.push({
-        start: new Date(startDate),
-        end: new Date(weekEndDate),
-      });
-      startDate = addWeeks(new Date(startDate), 1); // Move to the next week
-    }
-
-    setWeeks(calculatedWeeks);
-  }, [data]);
-
-  useEffect(() => {
-    if (selectedDay !== null) {
-      setFilteredData(
-        filteredData.filter(
-          (item) => format(new Date(item.date), "MMMM do yyyy") === selectedDay
-        )
-      );
-    } else {
-      // Reset to the data of the selected week or all data if no week is selected
-      setFilteredData(
-        selectedWeek !== null
-          ? data.filter(
-              (item) =>
-                new Date(item.date) >= weeks[selectedWeek].start &&
-                new Date(item.date) <= weeks[selectedWeek].end
-            )
-          : data
-      );
-    }
-  }, [selectedDay, selectedWeek, data, weeks]);
+  const {
+    weeks,
+    filteredData,
+    selectedWeek,
+    setSelectedWeek,
+    selectedDay,
+    setSelectedDay,
+    userProfiles,
+  } = useData(data, userObject);
 
   const openModalWithChart = (chart) => {
     setCurrentChart(chart);
     setIsModalOpen(true);
   };
-
-  function convertToSeconds(timeStr) {
-    const parts = timeStr.split(" ");
-    let seconds = 0;
-    parts.forEach((part) => {
-      if (part.endsWith("m")) {
-        seconds += parseInt(part) * 60; // convert minutes to seconds
-      } else if (part.endsWith("s")) {
-        seconds += parseInt(part); // add seconds
-      }
-    });
-    return seconds;
-  }
 
   if (!filteredData || filteredData.length === 0) return <Loading />;
 
