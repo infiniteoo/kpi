@@ -4,19 +4,25 @@ import { useEffect, useState } from 'react'
 import { separateByUser } from '../utils/dataManipulation'
 import Header from '../components/Header'
 import DataDisplay from '../components/Data.jsx'
-
+import React, { memo } from 'react'
 import ParticleDisplay from '../components/ParticleDisplay'
 import { IGNORED_USERS } from '../utils/constants'
+import { set } from 'date-fns'
 
-export default function Home() {
+const Home = () => {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [userObject, setUserObject] = useState(null)
   const [dataFinallyLoaded, setDataFinallyLoaded] = useState(false)
+  const [calledAxios, setCalledAxios] = useState(false)
 
   useEffect(() => {
+    // If data is already there, do not fetch again
+    if (calledAxios === true) return
+
     const fetchData = async () => {
       try {
+        setCalledAxios(true)
         setLoading(true)
 
         let result = await axios.get(
@@ -44,6 +50,7 @@ export default function Home() {
         console.error('Error fetching data: ', error)
       }
     }
+
     fetchData()
   }, [])
 
@@ -60,3 +67,5 @@ export default function Home() {
     </>
   )
 }
+
+export default React.memo(Home)
