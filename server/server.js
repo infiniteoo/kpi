@@ -286,7 +286,7 @@ app.get('/api/excel', async (req, res) => {
     } else {
       sourceArea = sourceAreaData
     }
-    console.log('object created.. now returning')
+
     return {
       date,
       time: `${time} ${meridian}`,
