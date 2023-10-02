@@ -9,8 +9,8 @@ import ListPick from "./charts/ListPick";
 import ItemsShipped from "./charts/ItemsShipped";
 import NonTrustedASNUndirectedReceive from "./charts/NonTrustedASNUndirectedReceive";
 import { calculateUserProfiles } from "../utils/userProfiles";
-
 import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
+import Dropdown from "./Dropdown";
 
 const DataDisplay = ({ data, userObject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -105,7 +105,7 @@ const DataDisplay = ({ data, userObject }) => {
           : data
       );
     }
-  }, [selectedDay, selectedWeek, data]);
+  }, [selectedDay, selectedWeek, data, weeks]);
 
   const openModalWithChart = (chart) => {
     setCurrentChart(chart);
@@ -124,7 +124,9 @@ const DataDisplay = ({ data, userObject }) => {
     });
     return seconds;
   }
-
+  /*  console.log("weeks: ", weeks);
+  console.log("filteredData: ", filteredData);
+ */
   if (!filteredData || filteredData.length === 0) return <Loading />;
 
   return (
@@ -133,44 +135,33 @@ const DataDisplay = ({ data, userObject }) => {
         <div></div>
         <div></div>
         <div className="flex flex-row  space-x-4 mb-4">
-          <div>
-            <select
-              onChange={(e) => {
-                if (e.target.value === "all") {
-                  setSelectedWeek(null);
-                  setSelectedDay(null);
-                } else {
-                  setSelectedWeek(Number(e.target.value));
-                  setSelectedDay(null);
-                }
-              }}
-              defaultValue="placeholder" // Set the default value to the placeholder value
-            >
-              <option value="placeholder" disabled hidden>
-                Select Week
-              </option>
-              <option value="all">Show All</option>
-              {weeks.map((week, index) => (
-                <option key={index} value={index}>
-                  {format(week.start, "MMMM do yyyy")} -{" "}
-                  {format(week.end, "MMMM do yyyy")}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <select
-              value={selectedDay || "placeholder"} // Bind the value to selectedDay
-              onChange={(e) =>
-                setSelectedDay(e.target.value === "all" ? null : e.target.value)
+          <Dropdown
+            options={[
+              { value: "all", label: "Show All" },
+              ...weeks.map((week, index) => ({
+                value: index,
+                label: `${format(week.start, "MMMM do yyyy")} - ${format(
+                  week.end,
+                  "MMMM do yyyy"
+                )}`,
+              })),
+            ]}
+            onChange={(e) => {
+              if (e.target.value === "all") {
+                setSelectedWeek(null);
+                setSelectedDay(null);
+              } else {
+                setSelectedWeek(Number(e.target.value));
+                setSelectedDay(null);
               }
-            >
-              <option value="placeholder" disabled hidden>
-                Select Day
-              </option>
-              <option value="all">Show All</option>
-              {/* Populate the dropdown with the unique days from the filteredData */}
-              {[
+            }}
+            placeholder="Select Week"
+          />
+
+          <Dropdown
+            options={[
+              { value: "all", label: "Show All" },
+              ...[
                 ...new Set(
                   filteredData.map((item) =>
                     format(new Date(item.date), "MMMM do yyyy")
@@ -178,13 +169,15 @@ const DataDisplay = ({ data, userObject }) => {
                 ),
               ]
                 .sort((a, b) => new Date(a) - new Date(b))
-                .map((day, index) => (
-                  <option key={index} value={day}>
-                    {day}
-                  </option>
-                ))}
-            </select>
-          </div>
+                .map((day) => ({ value: day, label: day })),
+            ]}
+            onChange={(e) =>
+              setSelectedDay(e.target.value === "all" ? null : e.target.value)
+            }
+            placeholder="Select Day"
+          />
+          <div></div>
+          <div></div>
         </div>
       </div>
       <div className="flex justify-center mb-2 section-title" id="stats">
