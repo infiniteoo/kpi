@@ -1,4 +1,3 @@
-// UserProfile.js
 import React from "react";
 
 const UserProfiles = ({ profile, rank }) => {

@@ -1,9 +1,11 @@
+import { memo } from "react";
+
 const Dropdown = ({ options, onChange, placeholder }) => {
   console.log(options, onChange, placeholder);
 
   return (
     <select
-      style={{ display: "block", zIndex: 1000 }}
+      style={{ display: "block", zIndex: 50 }}
       onChange={onChange}
       defaultValue="placeholder"
     >
@@ -19,4 +21,4 @@ const Dropdown = ({ options, onChange, placeholder }) => {
   );
 };
 
-export default Dropdown;
+export default memo(Dropdown);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 const Modal = ({ children, onClose }) => {
   const overlayStyle = {
@@ -46,4 +46,4 @@ const Modal = ({ children, onClose }) => {
   );
 };
 
-export default Modal;
+export default memo(Modal);

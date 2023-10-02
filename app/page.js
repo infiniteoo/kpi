@@ -23,8 +23,7 @@ export default function Home() {
             ? `http://localhost:5000/api/excel`
             : `https://tecvex.com/api/excel`,
         )
-        setLoading(false)
-        setDataFinallyLoaded(true)
+
         const filteredData = result.data.filter(
           (item) =>
             ![
@@ -54,6 +53,8 @@ export default function Home() {
         )
 
         setUserObject(filteredUserObject)
+        setLoading(false)
+        setDataFinallyLoaded(true)
       } catch (error) {
         console.error('Error fetching data: ', error)
       }

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Loading from "./Loading";
-import Modal from "./charts/Modal";
+/* import Modal from "./charts/Modal"; */
 import UndirectedFullInventoryMove from "./charts/UndirectedFullInventoryMove";
 import PalletPick from "./charts/PalletPick";
 import FluidLoadPalletPick from "./charts/FluidLoadPalletPick";
@@ -8,6 +8,7 @@ import TrailerLoad from "./charts/TrailerLoad";
 import ListPick from "./charts/ListPick";
 import ItemsShipped from "./charts/ItemsShipped";
 import NonTrustedASNUndirectedReceive from "./charts/NonTrustedASNUndirectedReceive";
+const Modal = React.lazy(() => import("./charts/Modal"));
 
 import { format } from "date-fns";
 import Dropdown from "./Dropdown";
@@ -29,10 +30,10 @@ const DataDisplay = ({ data, userObject }) => {
     userProfiles,
   } = useData(data, userObject);
 
-  const openModalWithChart = (chart) => {
+  const openModalWithChart = useCallback((chart) => {
     setCurrentChart(chart);
     setIsModalOpen(true);
-  };
+  }, []);
 
   if (!filteredData || filteredData.length === 0) return <Loading />;
 

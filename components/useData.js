@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { startOfWeek, endOfWeek, addWeeks, format } from 'date-fns'
 import { calculateUserProfiles } from '../utils/userProfiles'
+import { weights } from '../utils/constants'
 
 export const useData = (data, userObject) => {
   const [weeks, setWeeks] = useState([])
@@ -24,16 +25,6 @@ export const useData = (data, userObject) => {
 
   useEffect(() => {
     const profiles = calculateUserProfiles(userObject)
-    const weights = {
-      totalActions: 1,
-      avgTimeBetweenActions: 1,
-      palletPicks: 1,
-      undirectedFullInventoryMoves: 1,
-      fluidLoads: 1,
-      listPicks: 1,
-      trailerLoads: 1,
-      asnReceives: 1,
-    }
 
     // Calculate scores for each user
     const scoredProfiles = Object.entries(profiles).map(([user, profile]) => {
@@ -78,7 +69,7 @@ export const useData = (data, userObject) => {
         end: new Date(weekEndDate),
       })
       startDate = addWeeks(new Date(startDate), 1) // Move to the next week
-    } /*  */
+    }
     setWeeks(calculatedWeeks)
   }, [data])
 

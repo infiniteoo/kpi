@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import Loading from "../Loading";
+import React, { useState, useEffect, memo } from "react";
 import { format } from "date-fns";
+import { colors } from "../../utils/constants";
 
 import {
   Chart as ChartJS,
@@ -27,21 +27,6 @@ ChartJS.register(
 const PalletPick = ({ data, userObject }) => {
   const [chartData, setChartData] = useState(null);
   const [dateRange, setDateRange] = useState("");
-
-  const colors = [
-    "rgba(255, 99, 132, 0.6)", // red
-    "rgba(54, 162, 235, 0.6)", // blue
-    "rgba(255, 206, 86, 0.6)", // yellow
-    "rgba(75, 192, 192, 0.6)", // green
-    "rgba(153, 102, 255, 0.6)", // purple
-    "rgba(255, 159, 64, 0.6)", // orange
-    "rgba(129, 159, 64, 0.6)", // olive
-    "rgba(209, 102, 221, 0.6)", // pink
-    "rgba(100, 149, 237, 0.6)", // cornflower blue
-    "rgba(144, 238, 144, 0.6)", // light green
-    "rgba(255, 105, 180, 0.6)", // hot pink
-    "rgba(218, 165, 32, 0.6)", // golden rod
-  ];
 
   useEffect(() => {
     const filteredData = data.filter((item) => item.activity === "Pallet Pick");
@@ -137,4 +122,4 @@ const PalletPick = ({ data, userObject }) => {
   );
 };
 
-export default PalletPick;
+export default memo(PalletPick);
