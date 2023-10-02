@@ -178,7 +178,7 @@ app.post(
 )
 
 app.get('/api/excel', async (req, res) => {
-  const filePath = path.join(__dirname, '/inventory.csv')
+  const filePath = path.join(__dirname, '/Inventory.csv')
   const workbook = XLSX.readFile(filePath)
 
   const sheetName = workbook.SheetNames[0]
