@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from "react";
 import Loading from "./Loading";
-/* import Modal from "./charts/Modal"; */
 import UndirectedFullInventoryMove from "./charts/UndirectedFullInventoryMove";
 import PalletPick from "./charts/PalletPick";
 import FluidLoadPalletPick from "./charts/FluidLoadPalletPick";
@@ -93,7 +92,7 @@ const DataDisplay = ({ data, userObject }) => {
         </div>
       </div>
       <div className="flex justify-center mb-2 section-title" id="stats">
-        <h1 className="text-2xl font-bold text-center">
+        <h1 className="text-2xl font-bold text-center w-100">
           Loading/Unloading Trucks
         </h1>
       </div>
