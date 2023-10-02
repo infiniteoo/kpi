@@ -90,30 +90,15 @@ const DataDisplay = ({ data, userObject }) => {
         </div>
       </div>
       <div className="flex justify-center mb-2 section-title" id="stats">
-        <h1 className="text-2xl font-bold text-center">Overall User Stats</h1>
+        <h1 className="text-2xl font-bold text-center">
+          Loading/Unloading Trucks
+        </h1>
       </div>
 
       <div
         className="flex flex-wrap justify-center w-full gap-8 relative z-50"
         style={{ zIndex: 50, position: "relative" }}
       >
-        <div
-          style={{ zIndex: 50, position: "relative" }}
-          className="w-1/4 chart-card relative z-50"
-          onClick={() =>
-            openModalWithChart(
-              <UndirectedFullInventoryMove
-                data={filteredData}
-                userObject={userObject}
-              />
-            )
-          }
-        >
-          <UndirectedFullInventoryMove
-            data={filteredData}
-            userObject={userObject}
-          />
-        </div>
         <div
           className="w-1/4 chart-card relative z-50"
           onClick={() =>
@@ -188,6 +173,23 @@ const DataDisplay = ({ data, userObject }) => {
         className="flex flex-wrap justify-center w-full gap-8 relative z-50"
         style={{ zIndex: 50, position: "relative" }}
       >
+        <div
+          style={{ zIndex: 50, position: "relative" }}
+          className="w-1/4 chart-card relative z-50"
+          onClick={() =>
+            openModalWithChart(
+              <UndirectedFullInventoryMove
+                data={filteredData}
+                userObject={userObject}
+              />
+            )
+          }
+        >
+          <UndirectedFullInventoryMove
+            data={filteredData}
+            userObject={userObject}
+          />
+        </div>
         <div
           className="w-1/4 chart-card relative z-50"
           onClick={() =>

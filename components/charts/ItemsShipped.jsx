@@ -85,7 +85,7 @@ const itemsShipped = ({ data, userObject, isInModal }) => {
   }, [data]);
 
   return (
-    <div className="bg-gray-100 z-50">
+    <div className="bg-gray-100 z-50 flex flex-col h-full">
       {chartData ? (
         <>
           <div
@@ -104,6 +104,9 @@ const itemsShipped = ({ data, userObject, isInModal }) => {
               width: isInModal ? "600px" : "200px",
               height: isInModal ? "600px" : "200px",
               margin: "auto",
+              position: "relative",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Doughnut
