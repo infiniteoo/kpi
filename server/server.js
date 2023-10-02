@@ -178,17 +178,18 @@ app.post(
 )
 
 app.get('/api/excel', async (req, res) => {
+  console.log('entered /api/excel')
   const filePath = path.join(__dirname, '/Inventory.csv')
   const workbook = XLSX.readFile(filePath)
 
   const sheetName = workbook.SheetNames[0]
   const worksheet = workbook.Sheets[sheetName]
-
+  console.log('worksheet created')
   const excelData = XLSX.utils.sheet_to_json(worksheet, {
     header: 1,
     raw: true,
   })
-
+  console.log('CSV data processed')
   if (excelData.length > 0 && Array.isArray(excelData[0])) {
     excelData.shift() // Remove the header row if it exists
   }
@@ -282,7 +283,7 @@ app.get('/api/excel', async (req, res) => {
     } else {
       sourceArea = sourceAreaData
     }
-
+    console.log('object created.. now returning')
     return {
       date,
       time: `${time} ${meridian}`,
@@ -305,7 +306,7 @@ app.get('/api/excel', async (req, res) => {
       destinationArea,
     }
   })
-
+  console.log('returning formatted data')
   res.json(formattedData)
 })
 
