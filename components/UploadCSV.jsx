@@ -25,7 +25,7 @@ const UploadCSV = ({ setData }) => {
     axios
       .post(
         process.env.NEXT_PUBLIC_ENV === "development"
-          ? `http://localhost:5000/api/uploaded-file`
+          ? `/api/uploaded-file/uploaded-file`
           : `https://tecvex.com/api/uploaded-file`,
 
         formData,

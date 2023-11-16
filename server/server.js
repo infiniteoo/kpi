@@ -1,146 +1,146 @@
-const express = require('express')
-const app = express()
-const port = process.env.PORT || 5000
-const XLSX = require('xlsx')
-const path = require('path')
-const cors = require('cors')
-const multer = require('multer')
-const upload = multer({ dest: 'uploads/' }) // This specifies the directory where uploaded files will be stored.
-const fs = require('fs')
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 5000;
+const XLSX = require("xlsx");
+const path = require("path");
+const cors = require("cors");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" }); // This specifies the directory where uploaded files will be stored.
+const fs = require("fs");
 
-app.use(cors())
+app.use(cors());
 
 // Enable CORS for all routes
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*') // Adjust this based on your requirements
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Adjust this based on your requirements
   res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, PUT, DELETE, OPTIONS',
-  )
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
   res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept',
-  )
-  next()
-})
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 // Middleware setup
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(express.static('public'))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
-app.post(
-  '/api/uploaded-file',
-  upload.single('uploadedFile'),
+/* app.post(
+  "/api/uploaded-file",
+  upload.single("uploadedFile"),
   async (req, res) => {
     try {
       if (!req.file) {
-        return res.status(400).send('No file uploaded')
+        return res.status(400).send("No file uploaded");
       }
 
-      const filePath = req.file.path // Get the path of the uploaded file
-      const workbook = XLSX.readFile(filePath) // Read the uploaded file
+      const filePath = req.file.path; // Get the path of the uploaded file
+      const workbook = XLSX.readFile(filePath); // Read the uploaded file
 
-      const sheetName = workbook.SheetNames[0]
-      const worksheet = workbook.Sheets[sheetName]
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
 
       const excelData = XLSX.utils.sheet_to_json(worksheet, {
         header: 1,
         raw: true,
-      })
+      });
 
       if (excelData.length > 0 && Array.isArray(excelData[0])) {
-        excelData.shift() // Remove the header row if it exists
+        excelData.shift(); // Remove the header row if it exists
       }
 
       const formattedData = excelData.map((row) => {
-        const parts = row[0].split(' ')
-        const [date, time] = parts
-        const [meridian, ...userParts] = parts[2].split('\n') // Split the meridian and user using '\n'
-        const user = userParts.join(' ').trim() // Join the user parts back together and trim any extra spaces
+        const parts = row[0].split(" ");
+        const [date, time] = parts;
+        const [meridian, ...userParts] = parts[2].split("\n"); // Split the meridian and user using '\n'
+        const user = userParts.join(" ").trim(); // Join the user parts back together and trim any extra spaces
 
-        let strippedUser = (user.match(/[A-Z]+/g) || []).join('')
-        const [activity, operation] = row[1].split('\n')
-        const item = row[2]
-        let warehouse = ''
-        let strippedItem = ''
-        let choppedItem = ''
+        let strippedUser = (user.match(/[A-Z]+/g) || []).join("");
+        const [activity, operation] = row[1].split("\n");
+        const item = row[2];
+        let warehouse = "";
+        let strippedItem = "";
+        let choppedItem = "";
 
-        if (item === 3006 || item.includes('3006')) {
-          warehouse = '3006'
+        if (item === 3006 || item.includes("3006")) {
+          warehouse = "3006";
         }
 
-        if (typeof item === 'string' && item.includes('3006')) {
-          strippedItem = item.replace('3006', '')
-          if (strippedItem.includes('\n')) {
-            finalStrippedItem = strippedItem.replace('\n', '')
+        if (typeof item === "string" && item.includes("3006")) {
+          strippedItem = item.replace("3006", "");
+          if (strippedItem.includes("\n")) {
+            finalStrippedItem = strippedItem.replace("\n", "");
           } else {
-            finalStrippedItem = strippedItem
+            finalStrippedItem = strippedItem;
           }
-          choppedItem = finalStrippedItem.replace(/\s+/g, '')
+          choppedItem = finalStrippedItem.replace(/\s+/g, "");
         }
 
-        const quantity = row[3]
-        const moveUOM = row[4]
+        const quantity = row[3];
+        const moveUOM = row[4];
 
-        const lpnData = row[5]
-        let lpn = ''
-        let destinationLPN = ''
-        if (typeof lpnData === 'string' && lpnData.includes('\n')) {
-          lpn = lpnData.split('\n')[0]
-          destinationLPN = lpnData.split('\n')[1]
+        const lpnData = row[5];
+        let lpn = "";
+        let destinationLPN = "";
+        if (typeof lpnData === "string" && lpnData.includes("\n")) {
+          lpn = lpnData.split("\n")[0];
+          destinationLPN = lpnData.split("\n")[1];
         } else {
-          lpn = lpnData
+          lpn = lpnData;
         }
 
-        let subLPNdata = row[6]
-        let subLPN = ''
-        let destinationSubLPN = ''
+        let subLPNdata = row[6];
+        let subLPN = "";
+        let destinationSubLPN = "";
 
-        if (typeof subLPNdata === 'string' && subLPNdata.includes('\n')) {
-          subLPN = subLPNdata.split('\n')[0]
-          destinationSubLPN = subLPNdata.split('\n')[1]
+        if (typeof subLPNdata === "string" && subLPNdata.includes("\n")) {
+          subLPN = subLPNdata.split("\n")[0];
+          destinationSubLPN = subLPNdata.split("\n")[1];
         } else {
-          subLPN = subLPNdata
+          subLPN = subLPNdata;
         }
 
-        let detailLPNData = row[7]
-        let detailLPN = ''
-        let destinationDetailLPN = ''
+        let detailLPNData = row[7];
+        let detailLPN = "";
+        let destinationDetailLPN = "";
 
-        if (typeof detailLPNData === 'string' && detailLPNData.includes('\n')) {
-          detailLPN = detailLPNData.split('\n')[0]
-          destinationDetailLPN = detailLPNData.split('\n')[1]
+        if (typeof detailLPNData === "string" && detailLPNData.includes("\n")) {
+          detailLPN = detailLPNData.split("\n")[0];
+          destinationDetailLPN = detailLPNData.split("\n")[1];
         } else {
-          detailLPN = detailLPNData
+          detailLPN = detailLPNData;
         }
 
-        let sourceLocationData = row[8]
-        let sourceLocation = ''
-        let destinationLocation = ''
+        let sourceLocationData = row[8];
+        let sourceLocation = "";
+        let destinationLocation = "";
 
         if (
-          typeof sourceLocationData === 'string' &&
-          sourceLocationData.includes('\n')
+          typeof sourceLocationData === "string" &&
+          sourceLocationData.includes("\n")
         ) {
-          sourceLocation = sourceLocationData.split('\n')[0]
-          destinationLocation = sourceLocationData.split('\n')[1]
+          sourceLocation = sourceLocationData.split("\n")[0];
+          destinationLocation = sourceLocationData.split("\n")[1];
         } else {
-          sourceLocation = sourceLocationData
+          sourceLocation = sourceLocationData;
         }
 
-        let sourceAreaData = row[9]
-        let sourceArea = ''
-        let destinationArea = ''
+        let sourceAreaData = row[9];
+        let sourceArea = "";
+        let destinationArea = "";
 
         if (
-          typeof sourceAreaData === 'string' &&
-          sourceAreaData.includes('\n')
+          typeof sourceAreaData === "string" &&
+          sourceAreaData.includes("\n")
         ) {
-          sourceArea = sourceAreaData.split('\n')[0]
-          destinationArea = sourceAreaData.split('\n')[1]
+          sourceArea = sourceAreaData.split("\n")[0];
+          destinationArea = sourceAreaData.split("\n")[1];
         } else {
-          sourceArea = sourceAreaData
+          sourceArea = sourceAreaData;
         }
 
         return {
@@ -163,128 +163,128 @@ app.post(
           destinationLocation,
           sourceArea,
           destinationArea,
-        }
-      })
+        };
+      });
       fs.unlink(filePath, (err) => {
-        if (err) console.error('Error deleting file:', err)
-      })
+        if (err) console.error("Error deleting file:", err);
+      });
 
-      res.json(formattedData) // Send the processed data back to the client
+      res.json(formattedData); // Send the processed data back to the client
     } catch (error) {
-      console.error('Error processing file:', error)
-      res.status(500).send('Error processing file')
+      console.error("Error processing file:", error);
+      res.status(500).send("Error processing file");
     }
-  },
-)
+  }
+); */
 
-app.get('/api/excel', async (req, res) => {
-  console.log('entered /api/excel')
-  const filePath = path.join(__dirname, '/Inventory.csv')
-  console.log('filepath created: ', filePath)
-  const workbook = XLSX.readFile(filePath)
-  console.log('workbook created: ')
+/* app.get("/api/excel", async (req, res) => {
+  console.log("entered /api/excel");
+  const filePath = path.join(__dirname, "/Inventory.csv");
+  console.log("filepath created: ", filePath);
+  const workbook = XLSX.readFile(filePath);
+  console.log("workbook created: ");
 
-  const sheetName = workbook.SheetNames[0]
-  console.log('sheetname created: ')
-  const worksheet = workbook.Sheets[sheetName]
-  console.log('worksheet created')
+  const sheetName = workbook.SheetNames[0];
+  console.log("sheetname created: ");
+  const worksheet = workbook.Sheets[sheetName];
+  console.log("worksheet created");
   const excelData = XLSX.utils.sheet_to_json(worksheet, {
     header: 1,
     raw: true,
-  })
-  console.log('CSV data processed')
+  });
+  console.log("CSV data processed");
   if (excelData.length > 0 && Array.isArray(excelData[0])) {
-    excelData.shift() // Remove the header row if it exists
-  }
+    excelData.shift(); // Remove the header row if it exists
+  } */
 
-  // Only process the first 5 rows
-  /*  const firstFiveRows = excelData.slice(105, 110) */
+// Only process the first 5 rows
+/*  const firstFiveRows = excelData.slice(105, 110) */
 
-  const formattedData = excelData.map((row) => {
-    const parts = row[0].split(' ')
-    const [date, time] = parts
-    const [meridian, ...userParts] = parts[2].split('\n') // Split the meridian and user using '\n'
-    const user = userParts.join(' ').trim() // Join the user parts back together and trim any extra spaces
+/* const formattedData = excelData.map((row) => {
+    const parts = row[0].split(" ");
+    const [date, time] = parts;
+    const [meridian, ...userParts] = parts[2].split("\n"); // Split the meridian and user using '\n'
+    const user = userParts.join(" ").trim(); // Join the user parts back together and trim any extra spaces
 
-    let strippedUser = (user.match(/[A-Z]+/g) || []).join('')
-    const [activity, operation] = row[1].split('\n')
-    const item = row[2]
-    let warehouse = ''
-    let strippedItem = ''
-    let choppedItem = ''
+    let strippedUser = (user.match(/[A-Z]+/g) || []).join("");
+    const [activity, operation] = row[1].split("\n");
+    const item = row[2];
+    let warehouse = "";
+    let strippedItem = "";
+    let choppedItem = "";
 
-    if (item === 3006 || item.includes('3006')) {
-      warehouse = '3006'
+    if (item === 3006 || item.includes("3006")) {
+      warehouse = "3006";
     }
 
-    if (typeof item === 'string' && item.includes('3006')) {
-      strippedItem = item.replace('3006', '')
-      if (strippedItem.includes('\n')) {
-        finalStrippedItem = strippedItem.replace('\n', '')
+    if (typeof item === "string" && item.includes("3006")) {
+      strippedItem = item.replace("3006", "");
+      if (strippedItem.includes("\n")) {
+        finalStrippedItem = strippedItem.replace("\n", "");
       } else {
-        finalStrippedItem = strippedItem
+        finalStrippedItem = strippedItem;
       }
-      choppedItem = finalStrippedItem.replace(/\s+/g, '')
+      choppedItem = finalStrippedItem.replace(/\s+/g, "");
     }
 
-    const quantity = row[3]
-    const moveUOM = row[4]
+    const quantity = row[3];
+    const moveUOM = row[4];
 
-    const lpnData = row[5]
-    let lpn = ''
-    let destinationLPN = ''
-    if (typeof lpnData === 'string' && lpnData.includes('\n')) {
-      lpn = lpnData.split('\n')[0]
-      destinationLPN = lpnData.split('\n')[1]
+    const lpnData = row[5];
+    let lpn = "";
+    let destinationLPN = "";
+    if (typeof lpnData === "string" && lpnData.includes("\n")) {
+      lpn = lpnData.split("\n")[0];
+      destinationLPN = lpnData.split("\n")[1];
     } else {
-      lpn = lpnData
+      lpn = lpnData;
     }
 
-    let subLPNdata = row[6]
-    let subLPN = ''
-    let destinationSubLPN = ''
+    let subLPNdata = row[6];
+    let subLPN = "";
+    let destinationSubLPN = "";
 
-    if (typeof subLPNdata === 'string' && subLPNdata.includes('\n')) {
-      subLPN = subLPNdata.split('\n')[0]
-      destinationSubLPN = subLPNdata.split('\n')[1]
+    if (typeof subLPNdata === "string" && subLPNdata.includes("\n")) {
+      subLPN = subLPNdata.split("\n")[0];
+      destinationSubLPN = subLPNdata.split("\n")[1];
     } else {
-      subLPN = subLPNdata
+      subLPN = subLPNdata;
     }
 
-    let detailLPNData = row[7]
-    let detailLPN = ''
-    let destinationDetailLPN = ''
+    let detailLPNData = row[7];
+    let detailLPN = "";
+    let destinationDetailLPN = "";
 
-    if (typeof detailLPNData === 'string' && detailLPNData.includes('\n')) {
-      detailLPN = detailLPNData.split('\n')[0]
-      destinationDetailLPN = detailLPNData.split('\n')[1]
+    if (typeof detailLPNData === "string" && detailLPNData.includes("\n")) {
+      detailLPN = detailLPNData.split("\n")[0];
+      destinationDetailLPN = detailLPNData.split("\n")[1];
     } else {
-      detailLPN = detailLPNData
+      detailLPN = detailLPNData;
     }
 
-    let sourceLocationData = row[8]
-    let sourceLocation = ''
-    let destinationLocation = ''
+    let sourceLocationData = row[8];
+    let sourceLocation = "";
+    let destinationLocation = "";
 
     if (
-      typeof sourceLocationData === 'string' &&
-      sourceLocationData.includes('\n')
+      typeof sourceLocationData === "string" &&
+      sourceLocationData.includes("\n")
     ) {
-      sourceLocation = sourceLocationData.split('\n')[0]
-      destinationLocation = sourceLocationData.split('\n')[1]
+      sourceLocation = sourceLocationData.split("\n")[0];
+      destinationLocation = sourceLocationData.split("\n")[1];
     } else {
-      sourceLocation = sourceLocationData
+      sourceLocation = sourceLocationData;
     }
 
-    let sourceAreaData = row[9]
-    let sourceArea = ''
-    let destinationArea = ''
+    let sourceAreaData = row[9];
+    let sourceArea = "";
+    let destinationArea = "";
 
-    if (typeof sourceAreaData === 'string' && sourceAreaData.includes('\n')) {
-      sourceArea = sourceAreaData.split('\n')[0]
-      destinationArea = sourceAreaData.split('\n')[1]
+    if (typeof sourceAreaData === "string" && sourceAreaData.includes("\n")) {
+      sourceArea = sourceAreaData.split("\n")[0];
+      destinationArea = sourceAreaData.split("\n")[1];
     } else {
-      sourceArea = sourceAreaData
+      sourceArea = sourceAreaData;
     }
 
     return {
@@ -307,12 +307,12 @@ app.get('/api/excel', async (req, res) => {
       destinationLocation,
       sourceArea,
       destinationArea,
-    }
-  })
-  console.log('returning formatted data')
-  res.json(formattedData)
-})
+    };
+  });
+  console.log("returning formatted data");
+  res.json(formattedData);
+}); */
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
-})
+  console.log(`Server is running on port ${port}`);
+});
